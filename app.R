@@ -13,6 +13,9 @@ library(grid)
 library(leaflet)
 library(scales)
 
+source('graphYearsInput.R')
+source('mapYearsInput.R')
+
 temp1 = list.files(pattern = "*.Rdata")
 temp1<- lapply(temp1, function(x) {
   load(file = x)
@@ -41,13 +44,38 @@ ui <- dashboardPage(
     disable = FALSE,
     collapsed = FALSE,
     
-    selectInput("year", "Select a year: ", year_list, selected = "2018"),
-    uiOutput("states"),
-    uiOutput("counties")
+    
+    menuItem("Graphs", tabName = "Graphs", icon = icon("dashboard"), 
+             menuSubItem("Years", tabName = "graphsYears"),
+             menuSubItem("Hourly", tabName = "graphsHourly")
+             ),
+    menuItem("Map", icon = icon("th"), tabName = "Map",
+             menuSubItem("Years", tabName = "mapYears"),
+             menuSubItem("Hourly", tabName = "mapHourly")
+             )
     
   ),
   
-  dashboardBody()
+  
+  dynamicBody <- dashboardBody(
+    tabItems(
+      tabItem(tabName = "graphsYears",
+              graphYearsInput(year_list, state_list)
+      ),
+
+      tabItem(tabName = "mapYears",
+              mapYearsInput(year_list, state_list)
+      )
+    )
+  ),
+
+  dashboardBody(
+    #graphYearsInput(year_list)
+    dynamicBody
+  )
+    
+    
+    
 )
 
 # Define server logic required to draw a charts ----
@@ -82,6 +110,9 @@ server <- function(input, output) {
       as.vector(subset(allData$County, allData$State == input$state))
     selectInput("county", "Select a county: ", county_list, selected = county_list[0])
   })
+  
+  
+  
     
 }
 
