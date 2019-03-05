@@ -85,39 +85,37 @@ ui <- dashboardPage(
 # Define server logic required to draw a charts ----
 server <- function(input, output) { 
   
-    oneYearCountyReactive <-
-    reactive({
-      subset(
-        allData,
-        allData$Year == input$year &
-          allData$County == input$county &
-          allData$State == input$state
-      )
-    })
-  oneCountyReactive <-
-    reactive({
-      subset(allData,
-             allData$State == input$state &
-               allData$County == input$county)
-    })
+    # oneYearCountyReactive <-
+    # reactive({
+    #   subset(
+    #     allData,
+    #     allData$Year == input$year &
+    #       allData$County == input$county &
+    #       allData$State == input$state
+    #   )
+    # })
+  # oneCountyReactive <-
+  #   reactive({
+  #     subset(allData,
+  #            allData$State == input$state &
+  #              allData$County == input$county)
+  #   })
   
   # ------------------------ UI STUFF
+  # 
+  # output$states <- renderUI({
+  #   state_list <-
+  #     unique(as.vector(allData$State))
+  #   selectInput("state", "Select a state: ", state_list, selected = "Illinois")
+  # })
+  # 
+  # output$counties <- renderUI({
+  #   county_list <-
+  #     as.vector(subset(allData$County, allData$State == input$state))
+  #   selectInput("county", "Select a county: ", county_list, selected = county_list[0])
+  # })
+  # 
   
-  output$states <- renderUI({
-    state_list <-
-      unique(as.vector(allData$State))
-    selectInput("state", "Select a state: ", state_list, selected = "Illinois")
-  })
-  
-  output$counties <- renderUI({
-    county_list <-
-      as.vector(subset(allData$County, allData$State == input$state))
-    selectInput("county", "Select a county: ", county_list, selected = county_list[0])
-  })
-  
-  output$leaf <- renderLeaflet({ 
-    
-  })
   
     
 }
