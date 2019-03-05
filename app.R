@@ -15,18 +15,22 @@ library(scales)
 
 source('graphYearsInput.R')
 source('mapYearsInput.R')
+source('dataModel.R')
 
-temp1 = list.files(pattern = "*.Rdata")
-temp1<- lapply(temp1, function(x) {
-  load(file = x)
-  get(ls()[ls()!= "filename"])
-})
+# temp1 = list.files(pattern = "*.Rdata")
+# temp1<- lapply(temp1, function(x) {
+#   load(file = x)
+#   get(ls()[ls()!= "filename"])
+# })
+# hourly2018 <- do.call(rbind, temp1)
+# 
+# temp2 = list.files(pattern = "*.csv")
+# listedData2 <- lapply(temp2, read.table, sep = ',', header = TRUE)
+# allData <- do.call(rbind, listedData2)
 
-hourly2018 <- do.call(rbind, temp1)
+allData <- readData()
 
-temp2 = list.files(pattern = "*.csv")
-listedData2 <- lapply(temp2, read.table, sep = ',', header = TRUE)
-allData <- do.call(rbind, listedData2)
+
 
 year_list <- unique(as.vector(allData$Year))
 state_list <- unique(as.vector(allData$State))
@@ -111,7 +115,9 @@ server <- function(input, output) {
     selectInput("county", "Select a county: ", county_list, selected = county_list[0])
   })
   
-  
+  output$leaf <- renderLeaflet({ 
+    
+  })
   
     
 }

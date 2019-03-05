@@ -1,6 +1,8 @@
 library(rgdal)
 library(leaflet)
 
+source("dataModel.R")
+
 mapYearsInput <- function(year_list, state_list){
   
   aqi_list <- c("Good.Days","Moderate.Days", "Unhealthy.for.Sensitive.Groups.Days",
@@ -15,11 +17,7 @@ mapYearsInput <- function(year_list, state_list){
   leafmap <- us.map.county
   
   
-  # map <- leaflet(data = leafmap )  %>% addTiles() %>%
-  #  addPolygons(fillColor = topo.colors(10, alpha = NULL), stroke = FALSE)
-  #   
-  # map
-  #code from R website
+ 
   
   bins <- c(0, 10, 20, 50, 100, 200, 500, 1000, Inf)
   pal <- colorBin("YlOrRd", domain = c(0:4000), bins = bins)
