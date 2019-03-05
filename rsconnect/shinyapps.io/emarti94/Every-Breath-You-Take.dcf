@@ -1,0 +1,13 @@
+name: Every-Breath-You-Take
+title: Every-Breath-You-Take
+username:
+account: emarti94
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 762966
+bundleId: 1915692
+url: https://emarti94.shinyapps.io/Every-Breath-You-Take/
+when: 1551748638.54632
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: dailydata
