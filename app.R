@@ -64,7 +64,7 @@ ui <- dashboardPage(
   dynamicBody <- dashboardBody(
     tabItems(
       tabItem(tabName = "graphsYears",
-              graphYearsInput(year_list, state_list)
+              graphYearsInput("graphyears", year_list, state_list)
       ),
 
       tabItem(tabName = "mapYears",
@@ -84,6 +84,8 @@ ui <- dashboardPage(
 
 # Define server logic required to draw a charts ----
 server <- function(input, output) { 
+  
+  df <- callModule(graphYears, "graphyears")
   
     # oneYearCountyReactive <-
     # reactive({
