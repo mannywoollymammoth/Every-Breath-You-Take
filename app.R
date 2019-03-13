@@ -29,11 +29,9 @@ source('dataModel.R')
 # allData <- do.call(rbind, listedData2)
 
 allData <- readData()
-
-
-
 year_list <- unique(as.vector(allData$Year))
-state_list <- unique(as.vector(allData$State))
+state_list <- unique(as.vector(allData$`State Name`))
+county_list <- unique(as.vector(allData$`county Name`))
 
 # Define UI
 ui <- dashboardPage(
@@ -64,7 +62,7 @@ ui <- dashboardPage(
   dynamicBody <- dashboardBody(
     tabItems(
       tabItem(tabName = "graphsYears",
-              graphYearsInput("graphyears", year_list, state_list)
+              graphYearsInput("graphyears", year_list, state_list, county_list)
       ),
 
       tabItem(tabName = "mapYears",
@@ -85,7 +83,7 @@ ui <- dashboardPage(
 # Define server logic required to draw a charts ----
 server <- function(input, output) { 
   
-  df <- callModule(graphYears, "graphyears")
+  df <- callModule(graphYears, "graphyears", allData)
   
     # oneYearCountyReactive <-
     # reactive({

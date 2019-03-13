@@ -62,3 +62,22 @@ getTop100CountiesfromPollutants <- function() {
   
   oneYearAQI
 }
+
+
+AQIDataFrom1990to2018 <- function(justOneState, justOneCounty,justOneYear, allData){
+  parseByState <-
+    subset(allData, allData$`State Name` == justOneState)
+  print("parse by state")
+  print(parseByState)
+  
+  parseByCounty <-
+    subset(parseByState, parseByState$`county Name` == justOneCounty)
+  parseByYear <- subset(parseByCounty, parseByCounty$Year == justOneYear)
+  return(parseByYear)
+} 
+
+
+
+
+
+

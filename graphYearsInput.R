@@ -2,7 +2,14 @@ library(shiny)
 library(ggplot2)
 
 
-graphYearsInput <- function(id, label = "graph Years Input", year_list, state_list){
+source('dataModel.R')
+
+
+graphYearsInput <- function(id, year_list, state_list, county_list){
+  
+  print("year list")
+  print(year_list)
+  
   nameSpace <- NS(id)
   
   fluidRow(
@@ -18,13 +25,15 @@ graphYearsInput <- function(id, label = "graph Years Input", year_list, state_li
       #               selectInput(nameSpace("states"), "Select a state", temp_list, selected = "illinois")
       #               #selectInput("counties")
       # )
-      # 
+      
       box(
           h2("Graph Years Input"),
-          selectInput(nameSpace("year"), "Select a year: ", year_list, selected = "2018"),
-          selectInput(nameSpace("states"), "Select a state", c("California", "Florida", "Illinois"), selected = "illinois"))
+          selectInput(nameSpace("year"), "Select a year: ", year_list),
+          selectInput(nameSpace("state"), "Select a state", state_list, selected = "Illinois"),
+          selectInput(nameSpace("county"), "Select a county", county_list, selected = "Cook")
       )
-    
+      
+    )
     
     
   )
@@ -35,19 +44,52 @@ graphYearsInput <- function(id, label = "graph Years Input", year_list, state_li
 }
 
 #server logic
-graphYears <- function(input, output, session){
-  #yearSelected <- reactive(input$year)
-  #stateSelected <- reactive(input$state)
+graphYears <- function(input, output, session, allData){
+  yearSelected <- reactive(input$year)
+  stateSelected <- reactive(input$state)
+  countySelected <- reactive(input$county)
   
+
   output$plot1 <- renderPlot({
-    df <- data.frame(dose=c("D0.5", "D1", "D2"),
-                     len=c(4.2, 10, 29.5))
+    justOneState <- stateSelected()
+    justOneCounty <- countySelected()
+    justOneYear <- yearSelected()
     
-    p <- ggplot(data=df, aes(x=dose, y=len, group=1)) +
-      geom_line()+
-      geom_point()
-    p
+    yearlyData <- AQIDataFrom1990to2018(justOneState, justOneCounty,justOneYear, allData)
+    yearlyData$index <- seq.int(nrow(yearlyData))
+    
+    
+    print("yearly Data")
+    print(nrow(yearlyData))
+    
+    # ggplot(yearlyData, aes(x = yearlyData$index   )) + labs(title = "AQI Data", x = "Day", y = "Number of Days") +
+    #    coord_cartesian(ylim = c(0, 500)) + geom_line(aes(y = yearlyData$AQI, colour = "Median"))
+
+
+    ggplot(yearlyData, aes(x = yearlyData$index, y = yearlyData$AQI )) + geom_point(color="blue") +  labs(title = "AQI Data", x = "Day", y = "Number of Days") +
+      coord_cartesian(ylim = c(0, 500)) + geom_line()
   })
+  
+  
+  # #line graph for the AQI data for couunty
+  # output$plot1 <- renderPlot({
+  #   justOneState <- stateSelected()
+  #   justOneCounty <- countySelected()
+  #   justOneYear <- yearSelected()
+  #   yearlyData <- AQIDataFrom1990to2018(justOneState, justOneCounty,justOneYear, allData)
+  #   
+  #   ggplot(yearlyData, aes(x = yearlyData$Day)) +  labs(title = "AQI Data", x =
+  #                                                          "Days", y = "Number of Days") +
+  #     coord_cartesian(ylim = c(0, 365)) + geom_line(aes(y = yearlyData$Days.CO, colour = "CO")) +
+  #     geom_line(aes(y = yearlyData$Days.NO2, colour = "NO2")) + geom_line(aes(y =
+  #                                                                               yearlyData$Days.Ozone, colour = "Ozone")) +
+  #     geom_line(aes(y = yearlyData$Days.SO2, colour = "SO2")) + geom_line(aes(y =
+  #                                                                               yearlyData$Days.PM2.5, colour = "PM2.5")) +
+  #     geom_line(aes(y = yearlyData$Days.PM10, colour = "PM10"))
+  #   
+  # })
+  
+  
   
   #countySelected <- reactive(input$County)
 }
