@@ -65,7 +65,8 @@ ui <- dashboardPage(
               graphHourlyInput("graphhourly", state_list, county_list)
       ),
       tabItem(tabName = "mapYears",
-              mapYearsInput(year_list, state_list)
+              #mapYearsInput(year_list, state_list)
+              mapYearsInput("mapyears",year_list, state_list)
       )
     )
   ),
@@ -84,7 +85,7 @@ server <- function(input, output) {
   
   gy <- callModule(graphYears, "graphyears", allData)
   gh <- callModule(graphHourly, "graphhourly", allData)
-  
+  my <- callModule(mapYears, "mapyears", allData)
   
     # oneYearCountyReactive <-
     # reactive({
