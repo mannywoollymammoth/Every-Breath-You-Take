@@ -71,27 +71,7 @@ graphYears <- function(input, output, session, allData){
   })
   
   
-  # #line graph for the AQI data for couunty
-  # output$plot1 <- renderPlot({
-  #   justOneState <- stateSelected()
-  #   justOneCounty <- countySelected()
-  #   justOneYear <- yearSelected()
-  #   yearlyData <- AQIDataFrom1990to2018(justOneState, justOneCounty,justOneYear, allData)
-  #   
-  #   ggplot(yearlyData, aes(x = yearlyData$Day)) +  labs(title = "AQI Data", x =
-  #                                                          "Days", y = "Number of Days") +
-  #     coord_cartesian(ylim = c(0, 365)) + geom_line(aes(y = yearlyData$Days.CO, colour = "CO")) +
-  #     geom_line(aes(y = yearlyData$Days.NO2, colour = "NO2")) + geom_line(aes(y =
-  #                                                                               yearlyData$Days.Ozone, colour = "Ozone")) +
-  #     geom_line(aes(y = yearlyData$Days.SO2, colour = "SO2")) + geom_line(aes(y =
-  #                                                                               yearlyData$Days.PM2.5, colour = "PM2.5")) +
-  #     geom_line(aes(y = yearlyData$Days.PM10, colour = "PM10"))
-  #   
-  # })
-  
-  
-  
-  #countySelected <- reactive(input$County)
+ 
 }
 
 
