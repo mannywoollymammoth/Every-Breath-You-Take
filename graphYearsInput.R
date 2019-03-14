@@ -14,7 +14,18 @@ graphYearsInput <- function(id, year_list, state_list, county_list){
   
   fluidRow(
     fluidRow(
-      column(6,plotOutput(nameSpace("plot1")))
+    
+        column(6,plotOutput(nameSpace("plot1"))),
+    
+        column(6,
+          box(
+          title = "Air Quality",
+          solidHeader = TRUE,
+          status = "primary",
+          width = 12,
+          plotOutput("AQIBar", height = 300)
+          )
+        )
     ),
     
     fluidRow(
@@ -68,6 +79,20 @@ graphYears <- function(input, output, session, allData){
 
     ggplot(yearlyData, aes(x = yearlyData$index, y = yearlyData$AQI )) + geom_point(color="blue") +  labs(title = "AQI Data", x = "Day", y = "Number of Days") +
       coord_cartesian(ylim = c(0, 500)) + geom_line()
+  })
+  
+  
+  output$AQIBar <- renderPlot({
+    justOneYear <- yearSelected()
+    justOneState <- stateSelected()
+    justOneCounty <- countySelected()
+    
+    group = c("CO2",
+              "NO2",
+              "Ozone",
+              "SO2",
+              "PM2.5",
+              "PM10")
   })
   
   
