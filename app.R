@@ -15,25 +15,20 @@ library(scales)
 
 source('graphYearsInput.R')
 source('mapYearsInput.R')
+source('graphHourlyInput.R')
 source('dataModel.R')
 
-# temp1 = list.files(pattern = "*.Rdata")
-# temp1<- lapply(temp1, function(x) {
-#   load(file = x)
-#   get(ls()[ls()!= "filename"])
-# })
-# hourly2018 <- do.call(rbind, temp1)
-# 
-# temp2 = list.files(pattern = "*.csv")
-# listedData2 <- lapply(temp2, read.table, sep = ',', header = TRUE)
-# allData <- do.call(rbind, listedData2)
+
 
 allData <- readData()
-
-
-
 year_list <- unique(as.vector(allData$Year))
-state_list <- unique(as.vector(allData$State))
+state_list <- unique(as.vector(allData$`State Name`))
+county_list <- unique(as.vector(allData$`county Name`))
+
+#have two variables one for hourly read data and one for the yearly read
+
+
+
 
 # Define UI
 ui <- dashboardPage(
@@ -64,11 +59,14 @@ ui <- dashboardPage(
   dynamicBody <- dashboardBody(
     tabItems(
       tabItem(tabName = "graphsYears",
-              graphYearsInput(year_list, state_list)
+              graphYearsInput("graphyears", year_list, state_list, county_list)
       ),
-
+      tabItem(tabName = "graphsHourly",
+              graphHourlyInput("graphhourly", state_list, county_list)
+      ),
       tabItem(tabName = "mapYears",
-              mapYearsInput(year_list, state_list)
+              #mapYearsInput(year_list, state_list)
+              mapYearsInput("mapyears",year_list, state_list)
       )
     )
   ),
@@ -84,6 +82,10 @@ ui <- dashboardPage(
 
 # Define server logic required to draw a charts ----
 server <- function(input, output) { 
+  
+  gy <- callModule(graphYears, "graphyears", allData)
+  gh <- callModule(graphHourly, "graphhourly", allData)
+  my <- callModule(mapYears, "mapyears", allData)
   
     # oneYearCountyReactive <-
     # reactive({
