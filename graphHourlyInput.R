@@ -38,7 +38,7 @@ graphHourlyInput <- function(id, state_list, county_list){
 }
 
 #server logic
-graphHourly <- function(input, output, session, dailyData){
+graphHourly <- function(input, output, session, hourlyData){
   stateSelected <- reactive(input$state)
   countySelected <- reactive(input$county)
   

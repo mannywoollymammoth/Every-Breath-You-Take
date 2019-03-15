@@ -18,16 +18,13 @@ source('mapYearsInput.R')
 source('graphHourlyInput.R')
 source('dataModel.R')
 
-
-
+#have two variables one for hourly read data and one for the yearly read
 dailyData <- readDailyData()
+hourlyData <- readHourlyData()
+
 year_list <- unique(as.vector(dailyData$Year))
 state_list <- unique(as.vector(dailyData$`State Name`))
 county_list <- unique(as.vector(dailyData$`county Name`))
-
-#have two variables one for hourly read data and one for the yearly read
-
-
 
 
 # Define UI

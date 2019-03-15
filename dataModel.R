@@ -7,9 +7,8 @@ library(scales)
 library(stringr)
 library(tidyr)
 
+# data model script
 
-
-#data model script
 readDailyData <- function(){
   
   temp = list.files("daily_data/")
@@ -37,6 +36,29 @@ readDailyData <- function(){
   pollutant_list <- c("ozone", "SO2", "CO", "NO2", "PM2.5", "PM10")
   
   return(dailyData)
+}
+
+readHourlyData <- function(){
+
+  temp = list.files("hourly_data/")
+  # append daily_data/ to the beginning of each file name
+  temp2 = list
+  for(name in temp) {
+    newname = paste("hourly_data/", toString(name), sep="")
+    temp2 <- c(temp2, newname)
+  }
+  temp2[1] <- NULL
+
+  # join
+  listedData <- lapply(temp2, function(x) {
+    load(file = x)
+    get(ls()[ls()!= "filename"])
+  })
+  hourlyData <- do.call(rbind, listedData)
+
+  #hourlyData <- separate(hourlyData, Date, c("Year", "Month", "Day"), sep = "-")
+
+  return(hourlyData)
 }
 
 getTop100CountiesfromAQI <- function() {
