@@ -9,7 +9,7 @@ source('dataModel.R')
 
 graphHourlyInput <- function(id, state_list, county_list){
   hour_list <- c(0:23)
-  pollutant_list <- c("Ozone", "SO2", "CO", "NO2","PM2.5","PM10","Wind","Temperature")
+  pollutant_list <- c("Carbon monoxide", "Sulfur dioxide", "Nitrogen dioxide (NO2)", "Ozone","PM10 Total 0-10um STP","PM2.5 - Local Conditions","Wind","Temperature")
 
   
   nameSpace <- NS(id)
