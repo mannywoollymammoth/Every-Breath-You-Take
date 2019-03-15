@@ -60,7 +60,7 @@ mapYearsInput <- function(id, year_list, state_list) {
 }
 
 
-mapYears <- function(input, output, session, allData) {
+mapYears <- function(input, output, session, dailyData) {
   #Use of the following links for the map stuff
   #https://rstudio.github.io/leaflet/choropleths.html
   #https://franciscorequena.com/blog/how-to-make-an-interactive-map-of-usa-with-r-and-leaflet/

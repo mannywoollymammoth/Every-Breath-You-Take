@@ -20,10 +20,10 @@ source('dataModel.R')
 
 
 
-allData <- readData()
-year_list <- unique(as.vector(allData$Year))
-state_list <- unique(as.vector(allData$`State Name`))
-county_list <- unique(as.vector(allData$`county Name`))
+dailyData <- readDailyData()
+year_list <- unique(as.vector(dailyData$Year))
+state_list <- unique(as.vector(dailyData$`State Name`))
+county_list <- unique(as.vector(dailyData$`county Name`))
 
 #have two variables one for hourly read data and one for the yearly read
 
@@ -83,9 +83,9 @@ ui <- dashboardPage(
 # Define server logic required to draw a charts ----
 server <- function(input, output) { 
   
-  gy <- callModule(graphYears, "graphyears", allData)
-  gh <- callModule(graphHourly, "graphhourly", allData)
-  my <- callModule(mapYears, "mapyears", allData)
+  gy <- callModule(graphYears, "graphyears", dailyData)
+  gh <- callModule(graphHourly, "graphhourly", dailyData)
+  my <- callModule(mapYears, "mapyears", dailyData)
   
     # oneYearCountyReactive <-
     # reactive({

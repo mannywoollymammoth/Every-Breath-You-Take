@@ -10,25 +10,33 @@ library(tidyr)
 
 
 #data model script
-readData <- function(){
+readDailyData <- function(){
   
-  temp2 = list.files( pattern = "*.Rdata")
-  listedData2 <- lapply(temp2, function(x) {
+  temp = list.files("daily_data/")
+  # append daily_data/ to the beginning of each file name
+  temp2 = list
+  for(name in temp) {
+    newname = paste("daily_data/", toString(name), sep="")
+    temp2 <- c(temp2, newname)
+  }
+  temp2[1] <- NULL
+  
+  # join
+  listedData <- lapply(temp2, function(x) {
     load(file = x)
     get(ls()[ls()!= "filename"])
   })
-  allData <- do.call(rbind, listedData2)
-  allData <- separate(allData, Date, c("Year", "Month", "Day"), sep = "-")
+  dailyData <- do.call(rbind, listedData)
   
+  dailyData <- separate(dailyData, Date, c("Year", "Month", "Day"), sep = "-")
   
-  
-  year_list <- unique(as.vector(allData$Year))
-  state_list <- unique(as.vector(allData$`State Name`))
+  year_list <- unique(as.vector(dailyData$Year))
+  state_list <- unique(as.vector(dailyData$`State Name`))
   aqi_list <- c("Good","Moderate", "Unhealthy for Sensitive Groups",
                 "Unhealthy","Very Unhealthy","Hazardous")
   pollutant_list <- c("ozone", "SO2", "CO", "NO2", "PM2.5", "PM10")
   
-  return(allData)
+  return(dailyData)
 }
 
 getTop100CountiesfromAQI <- function() {
@@ -64,9 +72,9 @@ getTop100CountiesfromPollutants <- function() {
 }
 
 
-AQIDataFrom1990to2018 <- function(justOneState, justOneCounty,justOneYear, allData){
+AQIDataFrom1990to2018 <- function(justOneState, justOneCounty,justOneYear, dailyData){
   parseByState <-
-    subset(allData, allData$`State Name` == justOneState)
+    subset(dailyData, dailyData$`State Name` == justOneState)
   print("parse by state")
   print(parseByState)
   
