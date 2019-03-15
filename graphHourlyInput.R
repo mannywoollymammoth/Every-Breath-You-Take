@@ -38,7 +38,7 @@ graphHourlyInput <- function(id, state_list, county_list){
 }
 
 #server logic
-graphHourly <- function(input, output, session, allData){
+graphHourly <- function(input, output, session, hourlyData){
   stateSelected <- reactive(input$state)
   countySelected <- reactive(input$county)
   
@@ -57,7 +57,7 @@ graphHourly <- function(input, output, session, allData){
     
     #need to change from yearly data to hourly data so that stuff can get output
     #Fatima needs to do thiss
-    #yearlyData <- AQIDataFrom1990to2018(justOneState, justOneCounty,justOneYear, allData)
+    #yearlyData <- AQIDataFrom1990to2018(justOneState, justOneCounty,justOneYear, dailyData)
     #yearlyData$index <- seq.int(nrow(yearlyData))
   
     

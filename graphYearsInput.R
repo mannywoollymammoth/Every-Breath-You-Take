@@ -57,7 +57,7 @@ graphYearsInput <- function(id, year_list, state_list, county_list) {
 }
 
 #server logic
-graphYears <- function(input, output, session, allData) {
+graphYears <- function(input, output, session, dailyData) {
   yearSelected <- reactive(input$year)
   stateSelected <- reactive(input$state)
   countySelected <- reactive(input$county)
@@ -69,7 +69,7 @@ graphYears <- function(input, output, session, allData) {
     justOneYear <- yearSelected()
     
     yearlyData <-
-      AQIDataFrom1990to2018(justOneState, justOneCounty, justOneYear, allData)
+      AQIDataFrom1990to2018(justOneState, justOneCounty, justOneYear, dailyData)
     yearlyData$index <- seq.int(nrow(yearlyData))
     
     
