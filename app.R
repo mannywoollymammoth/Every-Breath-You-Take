@@ -81,7 +81,7 @@ ui <- dashboardPage(
 server <- function(input, output) { 
   
   gy <- callModule(graphYears, "graphyears", dailyData)
-  gh <- callModule(graphHourly, "graphhourly", dailyData)
+  gh <- callModule(graphHourly, "graphhourly", hourlyData)
   my <- callModule(mapYears, "mapyears", dailyData)
   
     # oneYearCountyReactive <-
