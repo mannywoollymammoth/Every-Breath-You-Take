@@ -97,12 +97,12 @@ getTop100CountiesfromPollutants <- function() {
   oneYearAQI
 }
 
-
+#returns the data for a specified year from 1990 to 2018
 AQIDataFrom1990to2018 <- function(justOneState, justOneCounty,justOneYear, dailyData){
   parseByState <-
     subset(dailyData, dailyData$`State Name` == justOneState)
-  print("parse by state")
-  print(parseByState)
+  #print("parse by state")
+  #print(parseByState)
   
   parseByCounty <-
     subset(parseByState, parseByState$`county Name` == justOneCounty)
@@ -111,7 +111,7 @@ AQIDataFrom1990to2018 <- function(justOneState, justOneCounty,justOneYear, daily
   return(parseByYear)
 } 
 
-
+#adds data color columns for graphing 
 addAQIColor <- function(daily_data){
   daily_data$Color = "black"
   colorVector <- brewer.pal(n=6,name = 'RdYlBu')

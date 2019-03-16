@@ -37,13 +37,7 @@ graphYearsInput <- function(id, year_list, state_list, county_list) {
                       )
                     )),
            
-           fluidRow(# absolutePanel(id = "controls", width = 330, height = "auto", bottom = 60,
-             #               temp_list <- c("California", "Florida", "Illinois"),
-             #               h2("Graph Years Input"),
-             #               selectInput(nameSpace("year"), "Select a year: ", year_list, selected = "2018"),
-             #               selectInput(nameSpace("states"), "Select a state", temp_list, selected = "illinois")
-             #               #selectInput("counties")
-             # )
+           fluidRow(
              
              box(
                h2("Graph Years Input"),
@@ -105,14 +99,35 @@ graphYears <- function(input, output, session, dailyData) {
       geom_bar( stat="identity")
     
     
-    
-    
-    
-    #ggplot(data, aes(fill=air_quality, y=value, x=yearlyData$Month)) + 
-    #  geom_bar( stat="identity")
-    
-    
   })
+  
+  
+  #updates the County list when a new state is selected
+  observeEvent(input$state, {
+    print("In the observer")
+    stateSelected <- reactive(input$state)
+    stateSelected <- stateSelected()
+    print("state selected")
+    print(stateSelected)
+    parseByState <- subset(dailyData, dailyData$`State Name` == stateSelected)
+    print("parse by state")
+    print(parseByState)
+    parseByCounties <- unique(parseByState$`county Name`)
+    
+    
+    if (is.null(stateSelected))
+      stateSelected <- character(0)
+    
+    
+    
+    print(input)
+    updateSelectInput(session,
+                      "county",
+                      choices = parseByCounties,
+                      selected = input$county
+                      
+    )
+  }, priority = 2)
   
   
   
