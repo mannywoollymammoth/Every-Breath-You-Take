@@ -8,7 +8,6 @@ library(stringr)
 library(tidyr)
 
 # data model script
-
 readDailyData <- function(){
   
   temp = list.files("daily_data/")
@@ -105,11 +104,14 @@ AQIDataFrom1990to2018 <- function(justOneState, justOneCounty,justOneYear, daily
   parseByCounty <-
     subset(parseByState, parseByState$`county Name` == justOneCounty)
   parseByYear <- subset(parseByCounty, parseByCounty$Year == justOneYear)
+  parseByYear$index <- seq.int(nrow(parseByYear))
   return(parseByYear)
 } 
 
 
+yearlyBarChartData <- function(daily_data){
 
+}
 
 
 

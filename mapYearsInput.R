@@ -29,30 +29,29 @@ mapYearsInput <- function(id, year_list, state_list) {
     )
   )),
   
-  fluidRow(column(4,
-          box(
-            title = "Leaflet Map Parameters",
-            solidHeader = TRUE,
-            status = "primary",
-            width = NULL,
-            selectInput("Year", "Select a year: ", year_list, selected = "2018"),
-            selectInput("AQI", "Select a aqi", aqi_list, selected = "Good.Days"),
-            selectInput("Pollutant", "Select a pollutant", pollutant_list, selected = "ozone")
-          )
-                  
-                  ))
+  fluidRow(column(
+    4,
+    box(
+      title = "Leaflet Map Parameters",
+      solidHeader = TRUE,
+      status = "primary",
+      width = NULL,
+      selectInput("Year", "Select a year: ", year_list, selected = "2018"),
+      selectInput("AQI", "Select a aqi", aqi_list, selected = "Good.Days"),
+      selectInput("Pollutant", "Select a pollutant", pollutant_list, selected = "ozone")
+    )
+    
+  )))
   
-  )
   
-
   
   # absolutePanel(id = "controls", width = 330, height = "auto", bottom = 60,
-  # 
+  #
   #               h2("Map Years Input"),
   #               selectInput("Year", "Select a year: ", year_list, selected = "2018"),
   #               selectInput("AQI", "Select a aqi", aqi_list, selected = "Good.Days"),
   #               selectInput("Pollutant", "Select a pollutant", pollutant_list, selected = "ozone")
-  # 
+  #
   # )
   
   

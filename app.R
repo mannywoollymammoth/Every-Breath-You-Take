@@ -20,7 +20,10 @@ source('dataModel.R')
 
 #have two variables one for hourly read data and one for the yearly read
 dailyData <- readDailyData()
-hourlyData <- readHourlyData()
+
+#temporary while i do my work
+#hourlyData <- readHourlyData()
+hourlyData <- c(0:100)
 
 year_list <- unique(as.vector(dailyData$Year))
 state_list <- unique(as.vector(dailyData$`State Name`))
