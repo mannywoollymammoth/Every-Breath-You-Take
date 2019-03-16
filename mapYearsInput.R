@@ -14,7 +14,7 @@ mapYearsInput <- function(id, year_list, state_list) {
       "Very.Unhealthy.Days",
       "Hazardous.Days"
     )
-  pollutant_list <- c("ozone", "SO2", "CO", "NO2", "PM2.5", "PM10")
+  pollutant_list <- c("AQI","Ozone", "SO2", "CO", "NO2", "PM2.5", "PM10")
   
   
   #added
@@ -36,35 +36,29 @@ mapYearsInput <- function(id, year_list, state_list) {
       solidHeader = TRUE,
       status = "primary",
       width = NULL,
-      selectInput("Year", "Select a year: ", year_list, selected = "2018"),
-      selectInput("AQI", "Select a aqi", aqi_list, selected = "Good.Days"),
-      selectInput("Pollutant", "Select a pollutant", pollutant_list, selected = "ozone")
+      selectInput(nameSpace("Year"), "Select a year: ", year_list, selected = "2018"),
+      selectInput(nameSpace("Pollutant"), "Select a pollutant", pollutant_list, selected = "ozone")
     )
     
   )))
   
   
   
-  # absolutePanel(id = "controls", width = 330, height = "auto", bottom = 60,
-  #
-  #               h2("Map Years Input"),
-  #               selectInput("Year", "Select a year: ", year_list, selected = "2018"),
-  #               selectInput("AQI", "Select a aqi", aqi_list, selected = "Good.Days"),
-  #               selectInput("Pollutant", "Select a pollutant", pollutant_list, selected = "ozone")
-  #
-  # )
-  
-  
   
 }
 
 
-mapYears <- function(input, output, session, dailyData) {
+mapYears <- function(input, output, session, daily_data) {
   #Use of the following links for the map stuff
   #https://rstudio.github.io/leaflet/choropleths.html
   #https://franciscorequena.com/blog/how-to-make-an-interactive-map-of-usa-with-r-and-leaflet/
   
+  yearSelected <- reactive(input$Year)
+  
   output$leaf <- renderLeaflet({
+    justOneYear <- yearSelected()
+    top100Counties <- getTop100CountiesfromAQI(daily_data, justOneYear)
+    
     us.map.county <-
       readOGR(dsn = './cb_2017_us_county_20m',
               layer = "cb_2017_us_county_20m",

@@ -29,7 +29,7 @@ readDailyData <- function(){
   })
   dailyData <- do.call(rbind, listedData)
   
-  dailyData <- separate(dailyData, Date, c("Year", "Month", "Day"), sep = "-")
+  dailyData <- separate(dailyData, Date, c("Year", "Month", "Day"), sep = "-", remove = FALSE)
   
   year_list <- unique(as.vector(dailyData$Year))
   state_list <- unique(as.vector(dailyData$`State Name`))
@@ -65,20 +65,20 @@ readHourlyData <- function(){
   return(hourlyData)
 }
 
-getTop100CountiesfromAQI <- function() {
-  oneYearAQI <- oneYearAQIReactive()
+getTop100CountiesfromAQI <- function(daily_data, justOneYear) {
+ 
+
+  print("THis is the year")
+  print(justOneYear)
   
-  #print("from reactive:!!!!!!!!!!!")
-  #print(oneYearAQI)
+  daily_data <- subset(daily_data, daily_data$Year == justOneYear)
+  daily_data <- daily_data[order(-daily_data$AQI),]
+  daily_data$Date <- format(yday(daily_data$Date))
+  daily_data$uniqueNames <- paste(daily_data$`State Name`,sep = "," ,daily_data$`county Name`)
   
-  oneYearAQI <- oneYearAQI[order(-oneYearAQI$AQI),]
   
-  # get first 100 unique values
   
-  print("after sort??")
-  print(oneYearAQI)
   
-  oneYearAQI
 }
 
 getTop100CountiesfromPollutants <- function() {
