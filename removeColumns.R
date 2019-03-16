@@ -9,8 +9,6 @@ for (name in hourlyList){
   name = paste("hourly_data/", toString(name), sep="")
   
   data = load(name)
-  temp$`State Code` = NULL
-  temp$`County Code` = NULL
   temp$`Site Num` = NULL
   temp$`Parameter Code` = NULL
   temp$POC = NULL
@@ -24,6 +22,8 @@ for (name in hourlyList){
   temp$`Method Name` = NULL
   temp$`Date of Last Change` = NULL
   
+  temp$`Combined Codes` <- paste(temp$`State Code`, temp$`County Code`, sep = "")
+  
   save(temp, file = name)
 }
 
@@ -32,10 +32,10 @@ for (name in dailyList){
   name = paste("daily_data/", toString(name), sep="")
   
   data = load(name)
-  temp$`State Code` = NULL
-  temp$`County Code` = NULL
   temp$`Defining Site` = NULL
   temp$`Number of Sites Reporting` = NULL
+  
+  temp$`Combined Codes` <- paste(temp$`State Code`, temp$`County Code`, sep = "")
   
   save(temp, file = name)
 }
