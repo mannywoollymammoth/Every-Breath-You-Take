@@ -37,13 +37,11 @@ mapYearsInput <- function(id, year_list, state_list) {
       status = "primary",
       width = NULL,
       selectInput(nameSpace("Year"), "Select a year: ", year_list, selected = "2018"),
-      selectInput(nameSpace("Pollutant"), "Select a pollutant", pollutant_list, selected = "ozone")
+      selectInput(nameSpace("Pollutant"), "Select a pollutant", pollutant_list, selected = "ozone"),
+      sliderInput(nameSpace("countySlider"), label = h3("Slider"), min = 0, max = 1000, value = 100)
     )
     
   )))
-  
-  
-  
   
 }
 
@@ -54,26 +52,22 @@ mapYears <- function(input, output, session, daily_data) {
   #https://franciscorequena.com/blog/how-to-make-an-interactive-map-of-usa-with-r-and-leaflet/
   
   yearSelected <- reactive(input$Year)
+  sliderSelected <- reactive(input$countySlider)
   
   output$leaf <- renderLeaflet({
     justOneYear <- yearSelected()
-    top100Counties <- getTop100CountiesfromAQI(daily_data, justOneYear)
+    justManyCounties <- sliderSelected()
     
-    
+    topCounties <- getTopCountiesfromAQI(daily_data, justOneYear, justManyCounties)
     
     us.map.county <-
       readOGR(dsn = './cb_2017_us_county_20m',
               layer = "cb_2017_us_county_20m",
               stringsAsFactors = FALSE)
     
-  
-    #leafmap <- us.map.county
-    leafmap <- merge(us.map.county, top100Counties, by= 'GEOID' )
-    bins <- c(0, 10, 20, 50, 100, 200, 500, 1000, Inf)
-    pal <- colorBin("YlOrRd", domain = c(0:4000), bins = bins)
-    pal <- colorQuantile("Spectral", NULL, n = 10)
-    
-    
+    leafmap <- merge(us.map.county, topCounties, by= 'GEOID' )
+    bins <- c(0, 50, 70, 90, 130, 250, Inf)
+    pal <- colorBin("YlOrRd", domain = topCounties$AQI, bins = bins)
     
     map <- leaflet(data = leafmap) %>%
       addTiles() %>%

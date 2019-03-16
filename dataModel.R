@@ -65,7 +65,7 @@ readHourlyData <- function(){
   return(hourlyData)
 }
 
-getTop100CountiesfromAQI <- function(daily_data, justOneYear) {
+getTopCountiesfromAQI <- function(daily_data, justOneYear, justManyCounties) {
  
 
   print("THis is the year")
@@ -82,7 +82,7 @@ getTop100CountiesfromAQI <- function(daily_data, justOneYear) {
   newTable$GEOID <- as.character(newTable$GEOID)
   print(newTable[1:100,])
   
-  return(newTable[1:100,])
+  return(newTable[1:justManyCounties,])
 }
 
 getTop100CountiesfromPollutants <- function() {
