@@ -23,7 +23,7 @@ graphYearsInput <- function(id, year_list, state_list, county_list) {
                              solidHeader = TRUE,
                              status = "primary",
                              width = 12,
-                             plotOutput(nameSpace("plot1"))
+                             plotOutput(nameSpace("AQIPlot"))
                            )),
                     
                     column(
@@ -69,25 +69,17 @@ graphYears <- function(input, output, session, dailyData) {
   countySelected <- reactive(input$county)
   
   
-  output$plot1 <- renderPlot({
+  output$AQIPlot <- renderPlot({
     justOneState <- stateSelected()
     justOneCounty <- countySelected()
     justOneYear <- yearSelected()
     
     yearlyData <-
       AQIDataFrom1990to2018(justOneState, justOneCounty, justOneYear, dailyData)
-    #yearlyData$index <- seq.int(nrow(yearlyData))
-    
-    
-    #print("yearly Data")
-    #print(nrow(yearlyData))
-    
-    # ggplot(yearlyData, aes(x = yearlyData$index   )) + labs(title = "AQI Data", x = "Day", y = "Number of Days") +
-    #    coord_cartesian(ylim = c(0, 500)) + geom_line(aes(y = yearlyData$AQI, colour = "Median"))
-    
+    yearlyData <- addAQIColor(yearlyData)
     
     ggplot(yearlyData, aes(x = yearlyData$index, y = yearlyData$AQI)) + geom_point(color =
-                                                                                     "blue") +  labs(title = "AQI Data", x = "Day", y = "Number of Days") +
+                                                                                     yearlyData$Color) +  labs(title = "AQI Data", x = "Day", y = "Number of Days") +
       coord_cartesian(ylim = c(0, 500)) + geom_line()
   })
   

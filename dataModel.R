@@ -7,6 +7,9 @@ library(scales)
 library(stringr)
 library(tidyr)
 
+#-------------
+library(RColorBrewer)
+
 # data model script
 readDailyData <- function(){
   
@@ -108,6 +111,18 @@ AQIDataFrom1990to2018 <- function(justOneState, justOneCounty,justOneYear, daily
   return(parseByYear)
 } 
 
+
+addAQIColor <- function(daily_data){
+  daily_data$Color = "black"
+  colorVector <- brewer.pal(n=6,name = 'RdYlBu')
+  daily_data$Color[daily_data$Category=="Good"]= colorVector[6]
+  daily_data$Color[daily_data$Category=="Moderate"]= colorVector[5]
+  daily_data$Color[daily_data$Category=="Unhealthy for Sensitive Groups"]= colorVector[4]
+  daily_data$Color[daily_data$Category=="Unhealthy"]= colorVector[3]
+  daily_data$Color[daily_data$Category=="Very Unhealthy"]= colorVector[2]
+  daily_data$Color[daily_data$Category=="Hazardous"]= colorVector[1]
+  return(daily_data)
+}
 
 yearlyBarChartData <- function(daily_data){
 
