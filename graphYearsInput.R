@@ -73,7 +73,7 @@ graphYears <- function(input, output, session, dailyData) {
     yearlyData <- addAQIColor(yearlyData)
     
     ggplot(yearlyData, aes(x = yearlyData$index, y = yearlyData$AQI)) + geom_point(color =
-                                                                                     yearlyData$Color) +  labs(title = "AQI Data", x = "Day", y = "Number of Days") +
+                                                                                     yearlyData$Color) +  labs(title = "AQI Data", x = "Day", y = "AQI") +
       coord_cartesian(ylim = c(0, 500)) + geom_line()
   })
   

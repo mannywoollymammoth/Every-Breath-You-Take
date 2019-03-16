@@ -114,13 +114,13 @@ AQIDataFrom1990to2018 <- function(justOneState, justOneCounty,justOneYear, daily
 #adds data color columns for graphing 
 addAQIColor <- function(daily_data){
   daily_data$Color = "black"
-  colorVector <- brewer.pal(n=6,name = 'RdYlBu')
-  daily_data$Color[daily_data$Category=="Good"]= colorVector[6]
-  daily_data$Color[daily_data$Category=="Moderate"]= colorVector[5]
-  daily_data$Color[daily_data$Category=="Unhealthy for Sensitive Groups"]= colorVector[4]
-  daily_data$Color[daily_data$Category=="Unhealthy"]= colorVector[3]
-  daily_data$Color[daily_data$Category=="Very Unhealthy"]= colorVector[2]
-  daily_data$Color[daily_data$Category=="Hazardous"]= colorVector[1]
+  colorVector <- brewer.pal(n=6,name = 'Set1')
+  daily_data$Color[daily_data$`Defining Parameter`=="Ozone"]= colorVector[6]
+  daily_data$Color[daily_data$`Defining Parameter`=="SO2"]= colorVector[5]
+  daily_data$Color[daily_data$`Defining Parameter`=="CO2"]= colorVector[4]
+  daily_data$Color[daily_data$`Defining Parameter`=="NO2"]= colorVector[3]
+  daily_data$Color[daily_data$`Defining Parameter`=="PM2.5"]= colorVector[2]
+  daily_data$Color[daily_data$`Defining Parameter`=="PM10"]= colorVector[1]
   return(daily_data)
 }
 
