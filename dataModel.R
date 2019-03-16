@@ -55,6 +55,8 @@ readHourlyData <- function(){
     get(ls()[ls()!= "filename"])
   })
   hourlyData <- do.call(rbind, listedData)
+  
+  print(hourlyData)
 
   #hourlyData <- separate(hourlyData, Date, c("Year", "Month", "Day"), sep = "-")
 
