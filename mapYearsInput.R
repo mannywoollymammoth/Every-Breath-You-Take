@@ -66,12 +66,12 @@ mapYears <- function(input, output, session, daily_data) {
               stringsAsFactors = FALSE)
     
     leafmap <- merge(us.map.county, topCounties, by= 'GEOID' )
-    bins <- c(0, 50, 70, 90, 130, 250, Inf)
+    bins <- c(0, 50, 60, 70, 80, 90, 130, 250, Inf)
     pal <- colorBin("YlOrRd", domain = topCounties$AQI, bins = bins)
     
     map <- leaflet(data = leafmap) %>%
       addTiles() %>%
-      setView(-96, 37.8, 4) %>%
+      setView(lng = -87.6298, lat = 41.8781, 4) %>%
       addPolygons(fillOpacity = 0.8,
                   fillColor = ~pal(AQI),
                   color = "#BDBDC3",
