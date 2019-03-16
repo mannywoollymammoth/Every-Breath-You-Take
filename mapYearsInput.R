@@ -59,19 +59,27 @@ mapYears <- function(input, output, session, daily_data) {
     justOneYear <- yearSelected()
     top100Counties <- getTop100CountiesfromAQI(daily_data, justOneYear)
     
+    
+    
     us.map.county <-
       readOGR(dsn = './cb_2017_us_county_20m',
               layer = "cb_2017_us_county_20m",
               stringsAsFactors = FALSE)
-    leafmap <- us.map.county
+    
+  
+    #leafmap <- us.map.county
+    leafmap <- merge(us.map.county, top100Counties, by= 'GEOID' )
     bins <- c(0, 10, 20, 50, 100, 200, 500, 1000, Inf)
     pal <- colorBin("YlOrRd", domain = c(0:4000), bins = bins)
+    pal <- colorQuantile("Spectral", NULL, n = 10)
+    
     
     
     map <- leaflet(data = leafmap) %>%
       addTiles() %>%
       setView(-96, 37.8, 4) %>%
       addPolygons(fillOpacity = 0.8,
+                  fillColor = ~pal(AQI),
                   color = "#BDBDC3",
                   weight = 1)
     

@@ -74,11 +74,15 @@ getTop100CountiesfromAQI <- function(daily_data, justOneYear) {
   daily_data <- subset(daily_data, daily_data$Year == justOneYear)
   daily_data <- daily_data[order(-daily_data$AQI),]
   daily_data$Date <- format(yday(daily_data$Date))
-  daily_data$uniqueNames <- paste(daily_data$`State Name`,sep = "," ,daily_data$`county Name`)
+  daily_data$GEOID <- paste(daily_data$`State Code`,sep = "" ,daily_data$`County Code`)
   
+  newTable <- aggregate(daily_data$AQI, list(daily_data$GEOID),mean )
+  newTable <- newTable[order(-newTable$x),]
+  colnames(newTable) <- c("GEOID", "AQI")
+  newTable$GEOID <- as.character(newTable$GEOID)
+  print(newTable[1:100,])
   
-  
-  
+  return(newTable[1:100,])
 }
 
 getTop100CountiesfromPollutants <- function() {
