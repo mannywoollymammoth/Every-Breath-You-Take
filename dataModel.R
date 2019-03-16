@@ -7,8 +7,10 @@ library(scales)
 library(stringr)
 library(tidyr)
 
-# data model script
+#-------------
+library(RColorBrewer)
 
+# data model script
 readDailyData <- function(){
   
   temp = list.files("daily_data/")
@@ -95,21 +97,36 @@ getTop100CountiesfromPollutants <- function() {
   oneYearAQI
 }
 
-
+#returns the data for a specified year from 1990 to 2018
 AQIDataFrom1990to2018 <- function(justOneState, justOneCounty,justOneYear, dailyData){
   parseByState <-
     subset(dailyData, dailyData$`State Name` == justOneState)
-  print("parse by state")
-  print(parseByState)
+  #print("parse by state")
+  #print(parseByState)
   
   parseByCounty <-
     subset(parseByState, parseByState$`county Name` == justOneCounty)
   parseByYear <- subset(parseByCounty, parseByCounty$Year == justOneYear)
+  parseByYear$index <- seq.int(nrow(parseByYear))
   return(parseByYear)
 } 
 
+#adds data color columns for graphing 
+addAQIColor <- function(daily_data){
+  daily_data$Color = "black"
+  colorVector <- brewer.pal(n=6,name = 'Set1')
+  daily_data$Color[daily_data$`Defining Parameter`=="Ozone"]= colorVector[6]
+  daily_data$Color[daily_data$`Defining Parameter`=="SO2"]= colorVector[5]
+  daily_data$Color[daily_data$`Defining Parameter`=="CO2"]= colorVector[4]
+  daily_data$Color[daily_data$`Defining Parameter`=="NO2"]= colorVector[3]
+  daily_data$Color[daily_data$`Defining Parameter`=="PM2.5"]= colorVector[2]
+  daily_data$Color[daily_data$`Defining Parameter`=="PM10"]= colorVector[1]
+  return(daily_data)
+}
 
+yearlyBarChartData <- function(daily_data){
 
+}
 
 
 

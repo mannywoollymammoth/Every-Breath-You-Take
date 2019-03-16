@@ -20,7 +20,10 @@ source('dataModel.R')
 
 #have two variables one for hourly read data and one for the yearly read
 dailyData <- readDailyData()
+
+#temporary while i do my work
 hourlyData <- readHourlyData()
+#hourlyData <- c(0:100)
 
 year_list <- unique(as.vector(dailyData$Year))
 state_list <- unique(as.vector(dailyData$`State Name`))
@@ -84,39 +87,6 @@ server <- function(input, output) {
   gh <- callModule(graphHourly, "graphhourly", hourlyData)
   my <- callModule(mapYears, "mapyears", dailyData)
   
-    # oneYearCountyReactive <-
-    # reactive({
-    #   subset(
-    #     allData,
-    #     allData$Year == input$year &
-    #       allData$County == input$county &
-    #       allData$State == input$state
-    #   )
-    # })
-  # oneCountyReactive <-
-  #   reactive({
-  #     subset(allData,
-  #            allData$State == input$state &
-  #              allData$County == input$county)
-  #   })
-  
-  # ------------------------ UI STUFF
-  # 
-  # output$states <- renderUI({
-  #   state_list <-
-  #     unique(as.vector(allData$State))
-  #   selectInput("state", "Select a state: ", state_list, selected = "Illinois")
-  # })
-  # 
-  # output$counties <- renderUI({
-  #   county_list <-
-  #     as.vector(subset(allData$County, allData$State == input$state))
-  #   selectInput("county", "Select a county: ", county_list, selected = county_list[0])
-  # })
-  # 
-  
-  
-    
 }
 
 shinyApp(ui = ui, server = server)
