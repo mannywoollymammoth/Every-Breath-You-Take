@@ -22,8 +22,8 @@ source('dataModel.R')
 dailyData <- readDailyData()
 
 #temporary while i do my work
-#hourlyData <- readHourlyData()
-hourlyData <- c(0:100)
+hourlyData <- readHourlyData()
+#hourlyData <- c(0:100)
 
 year_list <- unique(as.vector(dailyData$Year))
 state_list <- unique(as.vector(dailyData$`State Name`))
@@ -75,7 +75,6 @@ ui <- dashboardPage(
     #graphYearsInput(year_list)
     dynamicBody
   )
-    
     
     
 )

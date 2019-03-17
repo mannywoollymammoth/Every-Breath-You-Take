@@ -85,20 +85,23 @@ getTopCountiesfromAQI <- function(daily_data, justOneYear, justManyCounties) {
   return(newTable[1:justManyCounties,])
 }
 
-getTop100CountiesfromPollutants <- function() {
-  oneYearAQI <- oneYearPollutantReactive()
+getTopCountiesfromPollutants <- function(daily_data, justOneYear, justManyCounties, justOnePollutant) {
+  print("THis is the year")
+  print(justOneYear)
   
-  print("from reactive:!!!!!!!!!!!")
-  print(oneYearAQI)
+  daily_data <- subset(daily_data, daily_data$Year == justOneYear)
+  daily_data <- subset(daily_data, daily_data$`Defining Parameter` == justOnePollutant)
+  daily_data <- daily_data[order(-daily_data$AQI),]
+  daily_data$Date <- format(yday(daily_data$Date))
+  daily_data$GEOID <- paste(daily_data$`State Code`,sep = "" ,daily_data$`County Code`)
   
-  oneYearAQI <- oneYearAQI[order(-oneYearAQI$AQI),]
+  newTable <- aggregate(daily_data$AQI, list(daily_data$GEOID),mean )
+  newTable <- newTable[order(-newTable$x),]
+  colnames(newTable) <- c("GEOID", "AQI")
+  newTable$GEOID <- as.character(newTable$GEOID)
+  print(newTable[1:100,])
   
-  # get first 100 unique values
-  
-  print("after sort??")
-  print(oneYearAQI)
-  
-  oneYearAQI
+  return(newTable[1:justManyCounties,])
 }
 
 #returns the data for a specified year from 1990 to 2018

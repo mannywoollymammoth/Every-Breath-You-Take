@@ -37,7 +37,7 @@ mapYearsInput <- function(id, year_list, state_list) {
       status = "primary",
       width = NULL,
       selectInput(nameSpace("Year"), "Select a year: ", year_list, selected = "2018"),
-      selectInput(nameSpace("Pollutant"), "Select a pollutant", pollutant_list, selected = "ozone"),
+      selectInput(nameSpace("Pollutant"), "Select a pollutant", pollutant_list, selected = "AQI"),
       sliderInput(nameSpace("countySlider"), label = h3("Slider"), min = 0, max = 1000, value = 100)
     )
     
@@ -53,12 +53,18 @@ mapYears <- function(input, output, session, daily_data) {
   
   yearSelected <- reactive(input$Year)
   sliderSelected <- reactive(input$countySlider)
-  
+  pollutantSelected <- reactive(input$Pollutant)
   output$leaf <- renderLeaflet({
     justOneYear <- yearSelected()
     justManyCounties <- sliderSelected()
+    justOnePollutant <- pollutantSelected()
     
-    topCounties <- getTopCountiesfromAQI(daily_data, justOneYear, justManyCounties)
+    if(justOnePollutant == "AQI"){
+      topCounties <- getTopCountiesfromAQI(daily_data, justOneYear, justManyCounties)
+    }
+    else{
+      topCounties <- getTopCountiesfromPollutants(daily_data, justOneYear, justManyCounties, justOnePollutant)
+    }
     
     us.map.county <-
       readOGR(dsn = './cb_2017_us_county_20m',
@@ -66,9 +72,12 @@ mapYears <- function(input, output, session, daily_data) {
               stringsAsFactors = FALSE)
     
     leafmap <- merge(us.map.county, topCounties, by= 'GEOID' )
-    bins <- c(0, 50, 60, 70, 80, 90, 130, 250, Inf)
+    bins <- c(0,50, 60, 70, 80, 90, 130, 250, Inf)
     pal <- colorBin("YlOrRd", domain = topCounties$AQI, bins = bins)
-    
+   
+    #pal <- colorQuantile("YlOrRd", domain = topCounties$AQI, n = 20)
+    #pal <- colorNumeric("YlOrRd", c(0,350), na.color = NA)
+     
     map <- leaflet(data = leafmap) %>%
       addTiles() %>%
       setView(lng = -87.6298, lat = 41.8781, 4) %>%
