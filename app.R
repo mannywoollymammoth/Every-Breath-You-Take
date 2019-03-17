@@ -77,7 +77,6 @@ ui <- dashboardPage(
   )
     
     
-    
 )
 
 # Define server logic required to draw a charts ----
