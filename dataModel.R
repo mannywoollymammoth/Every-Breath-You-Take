@@ -141,6 +141,7 @@ AQIDataForYear <- function(justOneState, justOneCounty, dailyData){
 addAQIColor <- function(daily_data){
   daily_data$Color = "black"
   colorVector <- brewer.pal(n=6,name = 'Set1')
+  print(colorVector)
   daily_data$Color[daily_data$`Defining Parameter`=="Ozone"]= colorVector[6]
   daily_data$Color[daily_data$`Defining Parameter`=="SO2"]= colorVector[5]
   daily_data$Color[daily_data$`Defining Parameter`=="CO2"]= colorVector[4]

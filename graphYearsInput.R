@@ -84,14 +84,20 @@ graphYears <- function(input, output, session, NameListData) {
       AQIDataForYear(justOneState, justOneCounty, dailyData)
     yearlyData <- addAQIColor(yearlyData)
     
+    listOfPollutants = c("Ozone", "SO2", "CO2", "NO2", "PM2.5","PM10")
+    colorVector <- brewer.pal(n=6,name = 'Set1')
     
-    ggplot(yearlyData, aes(x = yearlyData$index, y = yearlyData$AQI)) + geom_point(color =
-                                                                                     yearlyData$Color) +  labs(title = "AQI Data", x = "Day", y = "AQI") +
-      coord_cartesian(ylim = c(0, 500)) + geom_line()
+    ggplot(yearlyData, aes(x = yearlyData$index, y = yearlyData$AQI)) + geom_point(aes(color =
+                                                                                     yearlyData$Color)) +  labs(title = "AQI Data", x = "Day", y = "AQI") +
+      coord_cartesian(ylim = c(0, 500)) + geom_line() + 
+      scale_color_manual(labels = listOfPollutants, values = c("#E41A1C", "#377EB8","#4DAF4A","#984EA3","#FF7F00","#FFFF33"))
+     
+     
+    
   })
   
  
-  
+  #aes(x = yearlyData$index, y = yearlyData$AQI , color = yearlyData$`Defining Parameter`)
   output$AQIBar <- renderPlot({
     justOneYear <- yearSelected()
     justOneState <- stateSelected()
