@@ -35,25 +35,17 @@ graphHourlyInput <- function(id, state_list, county_list) {
         "Select a county",
         county_list,
         selected = "Cook"
-      ),
+      ),   #TODO: fix the county list - needs to be reactive
+      
+      #TODO: fix this - needs to only choose from available days
       dateInput(nameSpace("date"), "Date input", value = "2018-01-01"),
-      selectInput(
-        nameSpace("pollutant"),
-        "Select a pollutant",
-        pollutant_list,
-        selected = "Ozone"
-      ),
-      selectInput(
-        nameSpace("startTime"),
-        "Select a start time",
-        hour_list,
-        selected = 0
-      ),
-      selectInput(
-        nameSpace("stopTime"),
-        "Select a stop time",
-        hour_list,
-        selected = 0
+      
+      # TODO: fix this - needs to only choose from available pollutants
+      checkboxGroupInput(
+        nameSpace("data_selected"),
+        "Data to show:",
+        c("CO", "SO2", "NO2", "Ozone", "PM10", "PM2.5", "Wind", "Temp"),
+        selected = TRUE
       )
     )
     
@@ -63,16 +55,15 @@ graphHourlyInput <- function(id, state_list, county_list) {
 
 #server logic
 graphHourly <- function(input, output, session, hourlyData) {
-  stateSelected <- reactive(input$state)
-  countySelected <- reactive(input$county)
-  dateSelected <- reactive(input$date)
+  
+  dataSelectedReactive <- reactive(input$data_selected)
   
   allHourlyDataForDayReactive <- reactive({
     subset(
       hourlyData,
       hourlyData$`State Name` == input$state &
-      hourlyData$`County Name` == input$county &
-      hourlyData$`Date GMT` == toString(input$date)
+        hourlyData$`County Name` == input$county &
+        hourlyData$`Date GMT` == toString(input$date)
     )
   })
   
@@ -80,30 +71,133 @@ graphHourly <- function(input, output, session, hourlyData) {
   
   output$AQIHourlyPlot <- renderPlot({
     oneDayData <- allHourlyDataForDayReactive()
-    print("this is all the data: ")
-    print(oneDayData)
+    dataSelected <- dataSelectedReactive()
     
-    # TODO: ACTUALLY GRAPH THIS
+    print(dataSelected)
     
-    #temp graph
-    df <- data.frame(dose = c("D0.5", "D1", "D2"),
-                     len = c(4.2, 10, 29.5))
+    grouped <-
+      setNames(aggregate(
+        oneDayData[8],
+        list(oneDayData$`Parameter Name`, (oneDayData$`Time GMT`) / 3600),
+        mean
+      ),
+      c("Parameter Name", "Hour", "Measure"))
     
-    ggplot(data = df, aes(x = dose, y = len, group = 1)) +
-      geom_line() +
-      geom_point()
+    # initially empty data frame and plot
+    df <- data.frame()
+    plot <-
+      ggplot() + xlab(label = "Hour") + ylab(label = "Measurement") + ggtitle(label = "Meausurements over the Day")
     
-    #need to change from yearly data to hourly data so that stuff can get output
-    #Fatima needs to do thiss
-    #yearlyData <- AQIDataFrom1990to2018(justOneState, justOneCounty,justOneYear, dailyData)
-    #yearlyData$index <- seq.int(nrow(yearlyData))
+    # add other data if they are in the selected list
     
+    if ("CO" %in% dataSelected &&
+        "Carbon monoxide" %in% grouped$`Parameter Name`) {
+      plot <- plot + geom_line(aes(
+        x = subset(
+          grouped$Hour,
+          grouped$`Parameter Name` == "Carbon monoxide"
+        ),
+        y = subset(
+          grouped$Measure,
+          grouped$`Parameter Name` == "Carbon monoxide"
+        ),
+        color = "CO"
+      ))
+    }
+    if ("SO2" %in% dataSelected &&
+        "Sulfur dioxide" %in% grouped$`Parameter Name`) {
+      plot <- plot + geom_line(aes(
+        x = subset(
+          grouped$Hour,
+          grouped$`Parameter Name` == "Sulfur dioxide"
+        ),
+        y = subset(
+          grouped$Measure,
+          grouped$`Parameter Name` == "Sulfur dioxide"
+        ),
+        color = "SO2"
+      ))
+    }
+    if ("NO2" %in% dataSelected &&
+        "Nitrogen dioxide (NO2)" %in% grouped$`Parameter Name`) {
+      plot <- plot + geom_line(aes(
+        x = subset(
+          grouped$Hour,
+          grouped$`Parameter Name` == "Nitrogen dioxide (NO2)"
+        ),
+        y = subset(
+          grouped$Measure,
+          grouped$`Parameter Name` == "Nitrogen dioxide (NO2)"
+        ),
+        color = "NO2"
+      ))
+    }
+    if ("Ozone" %in% dataSelected &&
+        "Ozone" %in% grouped$`Parameter Name`) {
+      plot <- plot + geom_line(aes(
+        x = subset(grouped$Hour, grouped$`Parameter Name` == "Ozone"),
+        y = subset(grouped$Measure, grouped$`Parameter Name` == "Ozone"),
+        color = "Ozone"
+      ))
+    }
+    if ("PM10" %in% dataSelected &&
+        "PM10 Total 0-10um STP" %in% grouped$`Parameter Name`) {
+      plot <- plot + geom_line(aes(
+        x = subset(
+          grouped$Hour,
+          grouped$`Parameter Name` == "PM10 Total 0-10um STP"
+        ),
+        y = subset(
+          grouped$Measure,
+          grouped$`Parameter Name` == "PM10 Total 0-10um STP"
+        ),
+        color = "PM10"
+      ))
+    }
+    if ("PM2.5" %in% dataSelected &&
+        "PM2.5 - Local Conditions" %in% grouped$`Parameter Name`) {
+      plot <- plot + geom_line(aes(
+        x = subset(
+          grouped$Hour,
+          grouped$`Parameter Name` == "PM2.5 - Local Conditions"
+        ),
+        y = subset(
+          grouped$Measure,
+          grouped$`Parameter Name` == "PM2.5 - Local Conditions"
+        ),
+        color = "PM2.5"
+      ))
+    }
+    if ("Temp" %in% dataSelected &&
+        "Outdoor Temperature" %in% grouped$`Parameter Name`) {
+      plot <- plot + geom_line(aes(
+        x = subset(
+          grouped$Hour,
+          grouped$`Parameter Name` == "Outdoor Temperature"
+        ),
+        y = subset(
+          grouped$Measure,
+          grouped$`Parameter Name` == "Outdoor Temperature"
+        ),
+        color = "Temp"
+      ))
+    }
+    if ("Wind" %in% dataSelected &&
+        "Wind Speed - Resultant" %in% grouped$`Parameter Name`) {
+      plot <- plot + geom_line(aes(
+        x = subset(
+          grouped$Hour,
+          grouped$`Parameter Name` == "Wind Speed - Resultant"
+        ),
+        y = subset(
+          grouped$Measure,
+          grouped$`Parameter Name` == "Wind Speed - Resultant"
+        ),
+        color = "Wind"
+      ))
+    }
     
-    # ggplot(yearlyData, aes(x = yearlyData$index   )) + labs(title = "AQI Data", x = "Day", y = "Number of Days") +
-    #    coord_cartesian(ylim = c(0, 500)) + geom_line(aes(y = yearlyData$AQI, colour = "Median"))
+    plot
     
-    
-    #ggplot(yearlyData, aes(x = yearlyData$index, y = yearlyData$AQI )) + geom_point(color="blue") +  labs(title = "AQI Data", x = "Day", y = "Number of Days") +
-    #  coord_cartesian(ylim = c(0, 500)) + geom_line()
   })
 }

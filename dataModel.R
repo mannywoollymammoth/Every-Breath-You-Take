@@ -15,15 +15,18 @@ readDailyData <- function(){
   
   temp = list.files("daily_data/")
   # append daily_data/ to the beginning of each file name
-  temp2 = list
+  final_list = list
   for(name in temp) {
     newname = paste("daily_data/", toString(name), sep="")
-    temp2 <- c(temp2, newname)
+    final_list <- c(final_list, newname)
   }
-  temp2[1] <- NULL
+  print("the daily data list")
+  print(final_list)
+  
+  final_list[1] <- NULL
   
   # join
-  listedData <- lapply(temp2, function(x) {
+  listedData <- lapply(final_list, function(x) {
     load(file = x)
     get(ls()[ls()!= "filename"])
   })
