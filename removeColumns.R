@@ -26,6 +26,7 @@ for (name in hourlyList){
   temp$`Method Code` = NULL
   temp$`Method Name` = NULL
   temp$`Date of Last Change` = NULL
+  temp$`Units of Measure` = NULL
   
   # if this is the winds file, remove all the wind direction data - we only want wind speed
   if(name == "hourly_WIND_2018.Rdata") {
