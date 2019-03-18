@@ -54,7 +54,9 @@ graphHourlyInput <- function(id, state_list, county_list) {
 }
 
 #server logic
-graphHourly <- function(input, output, session, hourlyData) {
+graphHourly <- function(input, output, session) {
+  #hourlyData <- readHourlyData()
+  hourlyData <- c(0:100)
   
   dataSelectedReactive <- reactive(input$data_selected)
   
@@ -196,6 +198,7 @@ graphHourly <- function(input, output, session, hourlyData) {
         color = "Wind"
       ))
     }
+    
     
     plot
     

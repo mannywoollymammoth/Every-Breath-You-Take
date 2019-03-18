@@ -3,6 +3,7 @@ library(leaflet)
 
 source("dataModel.R")
 
+
 mapYearsInput <- function(id, year_list, state_list) {
   nameSpace <- NS(id)
   aqi_list <-
@@ -43,13 +44,16 @@ mapYearsInput <- function(id, year_list, state_list) {
     
   )))
   
+  
 }
 
 
-mapYears <- function(input, output, session, daily_data) {
+mapYears <- function(input, output, session) {
   #Use of the following links for the map stuff
   #https://rstudio.github.io/leaflet/choropleths.html
   #https://franciscorequena.com/blog/how-to-make-an-interactive-map-of-usa-with-r-and-leaflet/
+  
+  #dailyData <- readDailyData()
   
   yearSelected <- reactive(input$Year)
   sliderSelected <- reactive(input$countySlider)
@@ -65,6 +69,7 @@ mapYears <- function(input, output, session, daily_data) {
     else{
       topCounties <- getTopCountiesfromPollutants(daily_data, justOneYear, justManyCounties, justOnePollutant)
     }
+    
     
     us.map.county <-
       readOGR(dsn = './cb_2017_us_county_20m',
@@ -88,4 +93,6 @@ mapYears <- function(input, output, session, daily_data) {
     
     map
   })
+  
+  
 }
