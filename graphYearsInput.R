@@ -62,6 +62,7 @@ graphYears <- function(input, output, session) {
   yearSelected <- reactive(input$year)
   stateSelected <- reactive(input$state)
   countySelected <- reactive(input$county)
+  
   #we had to use this snippet of code to convert our r data files
   #https://stackoverflow.com/questions/5577221/how-can-i-load-an-object-into-a-variable-name-that-i-specify-from-an-r-data-file
   loadRData <- function(fileName){
@@ -129,6 +130,16 @@ graphYears <- function(input, output, session) {
     
     
   })
+  
+  
+  
+  
+ 
+  
+  
+  
+  
+  
   
   
   #updates the County list when a new state is selected
