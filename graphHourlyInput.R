@@ -77,7 +77,7 @@ graphHourly <- function(input, output, session, hourlyData) {
     
     grouped <-
       setNames(aggregate(
-        oneDayData[8],
+        oneDayData[4],
         list(oneDayData$`Parameter Name`, (oneDayData$`Time GMT`) / 3600),
         mean
       ),
