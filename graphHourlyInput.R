@@ -89,7 +89,6 @@ graphHourlyInput <- function(id, state_list, county_list) {
       selectInput(nameSpace("county"), "Select a county", county_list, selected = "Cook"),
       
       #TODO: fix this - needs to only choose from available days
-      
       dateInput(nameSpace("date"), "Date input", value = "2018-01-01"),
       
       # TODO: fix this - needs to only choose from available pollutants
@@ -107,16 +106,13 @@ graphHourlyInput <- function(id, state_list, county_list) {
 
 #server logic
 graphHourly <- function(input, output, session) {
-  
-  nameSpace <- session$nameSpace
-  print("this si ns")
-  print(nameSpace)
-  
-  print("this is the session")
-  print(session)
-  
+
   hourlyData <- readHourlyData()
-  #hourlyData <- c(0:100)
+  
+  date_list <- unique(as.vector(hourlyData$`Date GMT`))
+  full_data_list <- seq(as.Date("2018-01-01"), as.Date("2018-12-31"), "days")
+  no_data_days <- full_data_list[! full_data_list %in% date_list]
+  print(no_data_days)
   
   countyReactive <- reactive(input$county)
   dataSelectedReactive <- reactive(input$data_selected)
@@ -144,8 +140,10 @@ graphHourly <- function(input, output, session) {
     county_list <- unique(as.vector( subset(hourlyData$`County Name`, hourlyData$`State Name` == state_selected) ))
     
     updateSelectInput(session, "county", choices = county_list, selected = input$county)
+    
+    # updateDateInput(session, "date", value = "2018-01-01", dats , datesdisabled = no_data_days)
+    
   })
-  
   
   # output$county <- renderUI({
   #   
