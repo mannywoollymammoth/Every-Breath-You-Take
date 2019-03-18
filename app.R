@@ -177,6 +177,18 @@ server <- function(input, output) {
   gh <- callModule(graphHourly, "graphhourly")
   my <- callModule(mapYears, "mapyears")
   
+  observeEvent(input$openInfo, {
+    showModal(modalDialog(
+      title = "Fatima Qarni & Emmanuel Martinez",
+      p(
+        "Libraries used for visualization: shiny, shinydashboard, ggplot2, lubridate, DT, jpeg, grid, leaflet, and scales. \n
+        The data is from: https://aqs.epa.gov/aqsweb/airdata/download_files.html 
+        Reference for map visualization: https://rstudio.github.io/leaflet/choropleths.html & 
+        https://franciscorequena.com/blog/how-to-make-an-interactive-map-of-usa-with-r-and-leaflet/"
+      )
+      ))
+  })
+  
 }
 
 shinyApp(ui = ui, server = server)
