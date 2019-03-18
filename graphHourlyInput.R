@@ -7,20 +7,15 @@ source('dataModel.R')
 
 
 graphHourlyInput <- function(id, state_list, county_list) {
-  hour_list <- c(0:23)
-  pollutant_list <-
-    c(
-      "Carbon monoxide",
-      "Sulfur dioxide",
-      "Nitrogen dioxide (NO2)",
-      "Ozone",
-      "PM10 Total 0-10um STP",
-      "PM2.5 - Local Conditions",
-      "Outdoor Temperature",
-      "Wind Speed - Resultant"
-    )
-  
+
   nameSpace <- NS(id)
+  
+  # state_list = c("Illinois", "Hawaii", "New York", "California", 
+  #                "Washington", "Texas", "Florida", "New Mexico", 
+  #                "Minnesota", "North Carolina", "Alabama")
+  # county_list = c("Cook", "Hawaii", "New York", "Los Angeles", 
+  #                 "King", "Harris", "Miami-Dade", "San Juan", 
+  #                 "Hennepin", "Wake", "Dekalb", "Jefferson")
   
   fluidRow(fluidRow(column(6, plotOutput(
     nameSpace("AQIHourlyPlot")
@@ -55,8 +50,8 @@ graphHourlyInput <- function(id, state_list, county_list) {
 
 #server logic
 graphHourly <- function(input, output, session) {
-  #hourlyData <- readHourlyData()
-  hourlyData <- c(0:100)
+  hourlyData <- readHourlyData()
+  #hourlyData <- c(0:100)
   
   dataSelectedReactive <- reactive(input$data_selected)
   
