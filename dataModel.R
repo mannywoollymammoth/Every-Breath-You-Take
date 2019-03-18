@@ -121,6 +121,23 @@ AQIDataFrom1990to2018 <- function(justOneState, justOneCounty,justOneYear, daily
   return(parseByYear)
 } 
 
+#returns the data for a specified year from 1990 to 2018
+AQIDataForYear <- function(justOneState, justOneCounty, dailyData){
+  parseByState <-
+    subset(dailyData, dailyData$`State Name` == justOneState)
+  #print("parse by state")
+  #print(parseByState)
+  
+  parseByCounty <-
+    subset(parseByState, parseByState$`county Name` == justOneCounty)
+  
+  parseByCounty$index <- seq.int(nrow(parseByCounty))
+  return(parseByCounty)
+} 
+
+
+
+
 #adds data color columns for graphing 
 addAQIColor <- function(daily_data){
   daily_data$Color = "black"

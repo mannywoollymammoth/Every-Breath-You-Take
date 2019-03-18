@@ -57,31 +57,55 @@ graphYearsInput <- function(id, year_list, state_list, county_list) {
 }
 
 #server logic
-graphYears <- function(input, output, session, dailyData) {
+graphYears <- function(input, output, session) {
+  #dailyData <- readDailyData()
   yearSelected <- reactive(input$year)
   stateSelected <- reactive(input$state)
   countySelected <- reactive(input$county)
-  
+  #we had to use this snippet of code to convert our r data files
+  #https://stackoverflow.com/questions/5577221/how-can-i-load-an-object-into-a-variable-name-that-i-specify-from-an-r-data-file
+  loadRData <- function(fileName){
+    #loads an RData file, and returns it
+    load(fileName)
+    get(ls()[ls() != "fileName"])
+  }
   
   output$AQIPlot <- renderPlot({
     justOneState <- stateSelected()
     justOneCounty <- countySelected()
     justOneYear <- yearSelected()
     
+    fileName = paste("daily_data/daily_aqi_by_county_",toString(justOneYear), ".Rdata",  sep="")
+    print(fileName)
+    dailyData <- loadRData(file= fileName)
+    dailyData <- separate(dailyData, Date, c("Year", "Month", "Day"), sep = "-", remove = FALSE)
+    print(dailyData)
+    
+    # yearlyData <-
+    #   AQIDataFrom1990to2018(justOneState, justOneCounty, justOneYear, dailyData)
+    # yearlyData <- addAQIColor(yearlyData)
+    
     yearlyData <-
-      AQIDataFrom1990to2018(justOneState, justOneCounty, justOneYear, dailyData)
+      AQIDataForYear(justOneState, justOneCounty, dailyData)
     yearlyData <- addAQIColor(yearlyData)
+    
     
     ggplot(yearlyData, aes(x = yearlyData$index, y = yearlyData$AQI)) + geom_point(color =
                                                                                      yearlyData$Color) +  labs(title = "AQI Data", x = "Day", y = "AQI") +
       coord_cartesian(ylim = c(0, 500)) + geom_line()
   })
   
+ 
   
   output$AQIBar <- renderPlot({
     justOneYear <- yearSelected()
     justOneState <- stateSelected()
     justOneCounty <- countySelected()
+    
+    fileName = paste("daily_data/daily_aqi_by_county_",toString(justOneYear), ".Rdata",  sep="")
+    print(fileName)
+    dailyData <- loadRData(file= fileName)
+    dailyData <- separate(dailyData, Date, c("Year", "Month", "Day"), sep = "-", remove = FALSE)
     
     group = c("CO2",
               "NO2",
@@ -90,10 +114,15 @@ graphYears <- function(input, output, session, dailyData) {
               "PM2.5",
               "PM10")
     
-    daily_data <-
-      AQIDataFrom1990to2018(justOneState, justOneCounty, justOneYear, dailyData)
-    AQICounts <- count(daily_data, c("Month", "Category"))
+    # daily_data <-
+    #   AQIDataFrom1990to2018(justOneState, justOneCounty, justOneYear, dailyData)
+    # AQICounts <- count(daily_data, c("Month", "Category"))
   
+    
+    daily_data <-
+      AQIDataForYear(justOneState, justOneCounty, dailyData)
+    AQICounts <- count(daily_data, c("Month", "Category"))
+    
     
     ggplot(AQICounts, aes(fill=AQICounts$Category, y=AQICounts$freq, x=AQICounts$Month)) + 
       geom_bar( stat="identity")
@@ -103,31 +132,31 @@ graphYears <- function(input, output, session, dailyData) {
   
   
   #updates the County list when a new state is selected
-  observeEvent(input$state, {
-    print("In the observer")
-    stateSelected <- reactive(input$state)
-    stateSelected <- stateSelected()
-    print("state selected")
-    print(stateSelected)
-    parseByState <- subset(dailyData, dailyData$`State Name` == stateSelected)
-    print("parse by state")
-    print(parseByState)
-    parseByCounties <- unique(parseByState$`county Name`)
-    
-    
-    if (is.null(stateSelected))
-      stateSelected <- character(0)
-    
-    
-    
-    print(input)
-    updateSelectInput(session,
-                      "county",
-                      choices = parseByCounties,
-                      selected = input$county
-                      
-    )
-  }, priority = 2)
+  # observeEvent(input$state, {
+  #   print("In the observer")
+  #   stateSelected <- reactive(input$state)
+  #   stateSelected <- stateSelected()
+  #   print("state selected")
+  #   print(stateSelected)
+  #   parseByState <- subset(dailyData, dailyData$`State Name` == stateSelected)
+  #   print("parse by state")
+  #   print(parseByState)
+  #   parseByCounties <- unique(parseByState$`county Name`)
+  #   
+  #   
+  #   if (is.null(stateSelected))
+  #     stateSelected <- character(0)
+  #   
+  #   
+  #   
+  #   print(input)
+  #   updateSelectInput(session,
+  #                     "county",
+  #                     choices = parseByCounties,
+  #                     selected = input$county
+  #                     
+  #   )
+  # }, priority = 2)
   
   
   

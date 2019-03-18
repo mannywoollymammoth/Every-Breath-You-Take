@@ -18,16 +18,39 @@ source('mapYearsInput.R')
 source('graphHourlyInput.R')
 source('dataModel.R')
 
+
+
 #have two variables one for hourly read data and one for the yearly read
-dailyData <- readDailyData()
+#dailyData <- readDailyData()
+
+
+
 
 #temporary while i do my work
-hourlyData <- readHourlyData()
+#hourlyData <- readHourlyData()
+
 #hourlyData <- c(0:100)
 
-year_list <- unique(as.vector(dailyData$Year))
-state_list <- unique(as.vector(dailyData$`State Name`))
-county_list <- unique(as.vector(dailyData$`county Name`))
+
+
+
+
+
+load(file = "daily_data/daily_aqi_by_county_1990.Rdata")
+
+
+#load.Rdata( filename="daily_data/daily_aqi_by_county_1990.Rdata", "daily" )
+# state_list <- unique(as.vector(daily["State Name"]))
+# county_list <- unique(as.vector(daily["county Name"]))
+# year_list <- unique(as.vector(daily["Year"]))
+
+year_list <- c(1990:2018)
+state_list <- unique(as.vector(temp$`State Name`))
+county_list <- unique(as.vector(temp$`county Name`))
+
+#year_list <- unique(as.vector(dailyData$Year))
+#state_list <- unique(as.vector(dailyData$`State Name`))
+#county_list <- unique(as.vector(dailyData$`county Name`))
 
 
 # Define UI
@@ -82,9 +105,9 @@ ui <- dashboardPage(
 # Define server logic required to draw a charts ----
 server <- function(input, output) { 
   
-  gy <- callModule(graphYears, "graphyears", dailyData)
-  gh <- callModule(graphHourly, "graphhourly", hourlyData)
-  my <- callModule(mapYears, "mapyears", dailyData)
+  gy <- callModule(graphYears, "graphyears" )
+  gh <- callModule(graphHourly, "graphhourly")
+  my <- callModule(mapYears, "mapyears")
   
 }
 
