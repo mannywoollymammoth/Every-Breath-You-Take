@@ -55,19 +55,36 @@ mapYears <- function(input, output, session) {
   
   #dailyData <- readDailyData()
   
+  #we had to use this snippet of code to convert our r data files
+  #https://stackoverflow.com/questions/5577221/how-can-i-load-an-object-into-a-variable-name-that-i-specify-from-an-r-data-file
+  loadRData <- function(fileName){
+    #loads an RData file, and returns it
+    load(fileName)
+    get(ls()[ls() != "fileName"])
+  }
+  
   yearSelected <- reactive(input$Year)
   sliderSelected <- reactive(input$countySlider)
   pollutantSelected <- reactive(input$Pollutant)
+  
+  
   output$leaf <- renderLeaflet({
     justOneYear <- yearSelected()
     justManyCounties <- sliderSelected()
     justOnePollutant <- pollutantSelected()
     
+    
+    fileName = paste("daily_data/daily_aqi_by_county_",toString(justOneYear), ".Rdata",  sep="")
+    print(fileName)
+    dailyData <- loadRData(file= fileName)
+    dailyData <- separate(dailyData, Date, c("Year", "Month", "Day"), sep = "-", remove = FALSE)
+    print(dailyData)
+    
     if(justOnePollutant == "AQI"){
-      topCounties <- getTopCountiesfromAQI(daily_data, justOneYear, justManyCounties)
+      topCounties <- getCountiesfromAQI(dailyData, justManyCounties)
     }
     else{
-      topCounties <- getTopCountiesfromPollutants(daily_data, justOneYear, justManyCounties, justOnePollutant)
+      topCounties <- getCountiesfromPollutants(dailyData, justManyCounties, justOnePollutant)
     }
     
     
@@ -94,5 +111,36 @@ mapYears <- function(input, output, session) {
     map
   })
   
+  
+  getCountiesfromAQI <- function(daily_data, justManyCounties) {
+    
+    daily_data <- daily_data[order(-daily_data$AQI),]
+    daily_data$Date <- format(yday(daily_data$Date))
+    daily_data$GEOID <- paste(daily_data$`State Code`,sep = "" ,daily_data$`County Code`)
+    
+    newTable <- aggregate(daily_data$AQI, list(daily_data$GEOID),mean )
+    newTable <- newTable[order(-newTable$x),]
+    colnames(newTable) <- c("GEOID", "AQI")
+    newTable$GEOID <- as.character(newTable$GEOID)
+    print(newTable[1:100,])
+    
+    return(newTable[1:justManyCounties,])
+  }
+  
+  getCountiesfromPollutants <- function(daily_data, justManyCounties, justOnePollutant) {
+    
+    daily_data <- subset(daily_data, daily_data$`Defining Parameter` == justOnePollutant)
+    daily_data <- daily_data[order(-daily_data$AQI),]
+    daily_data$Date <- format(yday(daily_data$Date))
+    daily_data$GEOID <- paste(daily_data$`State Code`,sep = "" ,daily_data$`County Code`)
+    
+    newTable <- aggregate(daily_data$AQI, list(daily_data$GEOID),mean )
+    newTable <- newTable[order(-newTable$x),]
+    colnames(newTable) <- c("GEOID", "AQI")
+    newTable$GEOID <- as.character(newTable$GEOID)
+    print(newTable[1:100,])
+    
+    return(newTable[1:justManyCounties,])
+  }
   
 }
