@@ -20,38 +20,15 @@ source('dataModel.R')
 
 
 
-#have two variables one for hourly read data and one for the yearly read
-#dailyData <- readDailyData()
+#this data gets passed to the graphYears input so that we can dynamically update the list of counties
+#when a new state is selected
+daily <- load(file = "daily_data/daily_aqi_by_county_1990.Rdata")
+NameListData <- get(daily[ls() != "fileName"])
 
-
-
-
-#temporary while i do my work
-#hourlyData <- readHourlyData()
-
-#hourlyData <- c(0:100)
-
-
-
-
-
-
-load(file = "daily_data/daily_aqi_by_county_1990.Rdata")
-
-
-#load.Rdata( filename="daily_data/daily_aqi_by_county_1990.Rdata", "daily" )
-# state_list <- unique(as.vector(daily["State Name"]))
-# county_list <- unique(as.vector(daily["county Name"]))
-# year_list <- unique(as.vector(daily["Year"]))
 
 year_list <- c(1990:2018)
-state_list <- unique(as.vector(temp$`State Name`))
-county_list <- unique(as.vector(temp$`county Name`))
-
-#year_list <- unique(as.vector(dailyData$Year))
-#state_list <- unique(as.vector(dailyData$`State Name`))
-#county_list <- unique(as.vector(dailyData$`county Name`))
-
+state_list <- unique(as.vector(NameListData$`State Name`))
+county_list <- unique(as.vector(NameListData$`county Name`))
 
 # Define UI
 ui <- dashboardPage(
@@ -66,15 +43,106 @@ ui <- dashboardPage(
     disable = FALSE,
     collapsed = FALSE,
     
+    sidebarMenu(
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      menuItem("GraphsYears", tabName = "graphsYears"),
+      menuItem("GraphsHourly", tabName = "graphsHourly"),
+      menuItem("Map", icon = icon("th"), tabName = "mapYears")
+    )
     
-    menuItem("Graphs", tabName = "Graphs", icon = icon("dashboard"), 
-             menuSubItem("Years", tabName = "graphsYears"),
-             menuSubItem("Hourly", tabName = "graphsHourly")
-             ),
-    menuItem("Map", icon = icon("th"), tabName = "Map",
-             menuSubItem("Years", tabName = "mapYears"),
-             menuSubItem("Hourly", tabName = "mapHourly")
-             )
+    
+    
     
   ),
   
@@ -105,7 +173,7 @@ ui <- dashboardPage(
 # Define server logic required to draw a charts ----
 server <- function(input, output) { 
   
-  gy <- callModule(graphYears, "graphyears" )
+  gy <- callModule(graphYears, "graphyears", NameListData )
   gh <- callModule(graphHourly, "graphhourly")
   my <- callModule(mapYears, "mapyears")
   

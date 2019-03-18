@@ -23,7 +23,7 @@ graphYearsInput <- function(id, year_list, state_list, county_list) {
                              solidHeader = TRUE,
                              status = "primary",
                              width = 12,
-                             plotOutput(nameSpace("AQIPlot"))
+                             plotOutput(nameSpace("AQIPlot"), height = 1400)
                            )),
                     
                     column(
@@ -33,14 +33,75 @@ graphYearsInput <- function(id, year_list, state_list, county_list) {
                         solidHeader = TRUE,
                         status = "primary",
                         width = 12,
-                        plotOutput(nameSpace("AQIBar"))
+                        plotOutput(nameSpace("AQIBar"), height = 1400)
                       )
                     )),
            
            fluidRow(
-             
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
              box(
                h2("Graph Years Input"),
+               width = 4,
                selectInput(nameSpace("year"), "Select a year: ", year_list),
                selectInput(nameSpace("state"), "Select a state", state_list, selected = "Illinois"),
                selectInput(
@@ -57,19 +118,11 @@ graphYearsInput <- function(id, year_list, state_list, county_list) {
 }
 
 #server logic
-graphYears <- function(input, output, session) {
+graphYears <- function(input, output, session, NameListData) {
   #dailyData <- readDailyData()
   yearSelected <- reactive(input$year)
   stateSelected <- reactive(input$state)
   countySelected <- reactive(input$county)
-  
-  #we had to use this snippet of code to convert our r data files
-  #https://stackoverflow.com/questions/5577221/how-can-i-load-an-object-into-a-variable-name-that-i-specify-from-an-r-data-file
-  loadRData <- function(fileName){
-    #loads an RData file, and returns it
-    load(fileName)
-    get(ls()[ls() != "fileName"])
-  }
   
   output$AQIPlot <- renderPlot({
     justOneState <- stateSelected()
@@ -78,34 +131,42 @@ graphYears <- function(input, output, session) {
     
     fileName = paste("daily_data/daily_aqi_by_county_",toString(justOneYear), ".Rdata",  sep="")
     print(fileName)
-    dailyData <- loadRData(file= fileName)
+    #dailyData <- loadRData(file= fileName)
+    
+    daily <- load(fileName)
+    dailyData <- get(daily[ls() != "fileName"])
+    
     dailyData <- separate(dailyData, Date, c("Year", "Month", "Day"), sep = "-", remove = FALSE)
     print(dailyData)
     
-    # yearlyData <-
-    #   AQIDataFrom1990to2018(justOneState, justOneCounty, justOneYear, dailyData)
-    # yearlyData <- addAQIColor(yearlyData)
+
     
     yearlyData <-
       AQIDataForYear(justOneState, justOneCounty, dailyData)
     yearlyData <- addAQIColor(yearlyData)
     
+    listOfPollutants = c("Ozone", "SO2", "CO2", "NO2", "PM2.5","PM10")
+    colorVector <- brewer.pal(n=6,name = 'Set1')
     
-    ggplot(yearlyData, aes(x = yearlyData$index, y = yearlyData$AQI)) + geom_point(color =
-                                                                                     yearlyData$Color) +  labs(title = "AQI Data", x = "Day", y = "AQI") +
-      coord_cartesian(ylim = c(0, 500)) + geom_line()
+    ggplot(yearlyData, aes(x = yearlyData$index, y = yearlyData$AQI)) + geom_point(aes(color =
+                                                                                     yearlyData$Color)) +  labs(title = "AQI Data", x = "Day", y = "AQI") +
+      coord_cartesian(ylim = c(0, 500)) + geom_line() + 
+      scale_color_manual(labels = listOfPollutants, values = c("#E41A1C", "#377EB8","#4DAF4A","#984EA3","#FF7F00","#FFFF33"))
+     
+     
+    
   })
   
  
-  
+  #aes(x = yearlyData$index, y = yearlyData$AQI , color = yearlyData$`Defining Parameter`)
   output$AQIBar <- renderPlot({
     justOneYear <- yearSelected()
     justOneState <- stateSelected()
     justOneCounty <- countySelected()
     
     fileName = paste("daily_data/daily_aqi_by_county_",toString(justOneYear), ".Rdata",  sep="")
-    print(fileName)
-    dailyData <- loadRData(file= fileName)
+    daily <- load(fileName)
+    dailyData <- get(daily[ls() != "fileName"])
     dailyData <- separate(dailyData, Date, c("Year", "Month", "Day"), sep = "-", remove = FALSE)
     
     group = c("CO2",
@@ -115,10 +176,6 @@ graphYears <- function(input, output, session) {
               "PM2.5",
               "PM10")
     
-    # daily_data <-
-    #   AQIDataFrom1990to2018(justOneState, justOneCounty, justOneYear, dailyData)
-    # AQICounts <- count(daily_data, c("Month", "Category"))
-  
     
     daily_data <-
       AQIDataForYear(justOneState, justOneCounty, dailyData)
@@ -143,31 +200,30 @@ graphYears <- function(input, output, session) {
   
   
   #updates the County list when a new state is selected
-  # observeEvent(input$state, {
-  #   print("In the observer")
-  #   stateSelected <- reactive(input$state)
-  #   stateSelected <- stateSelected()
-  #   print("state selected")
-  #   print(stateSelected)
-  #   parseByState <- subset(dailyData, dailyData$`State Name` == stateSelected)
-  #   print("parse by state")
-  #   print(parseByState)
-  #   parseByCounties <- unique(parseByState$`county Name`)
-  #   
-  #   
-  #   if (is.null(stateSelected))
-  #     stateSelected <- character(0)
-  #   
-  #   
-  #   
-  #   print(input)
-  #   updateSelectInput(session,
-  #                     "county",
-  #                     choices = parseByCounties,
-  #                     selected = input$county
-  #                     
-  #   )
-  # }, priority = 2)
+  observeEvent(input$state, {
+   
+    stateSelected <- reactive(input$state)
+    stateSelected <- stateSelected()
+    
+   
+    parseByState <- subset(NameListData, NameListData$`State Name` == stateSelected)
+   
+    parseByCounties <- unique(parseByState$`county Name`)
+
+
+    if (is.null(stateSelected))
+      stateSelected <- character(0)
+
+
+
+    print(input)
+    updateSelectInput(session,
+                      "county",
+                      choices = parseByCounties,
+                      selected = input$county
+
+    )
+  }, priority = 2)
   
   
   

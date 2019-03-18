@@ -26,17 +26,79 @@ mapYearsInput <- function(id, year_list, state_list) {
       solidHeader = TRUE,
       status = "primary",
       width = NULL,
-      leafletOutput(nameSpace("leaf"))
+      leafletOutput(nameSpace("leaf"), height = 1400)
     )
   )),
   
   fluidRow(column(
-    4,
+    5,
+    
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
+    br(),
     box(
       title = "Leaflet Map Parameters",
       solidHeader = TRUE,
       status = "primary",
-      width = NULL,
+      width = 6,
       selectInput(nameSpace("Year"), "Select a year: ", year_list, selected = "2018"),
       selectInput(nameSpace("Pollutant"), "Select a pollutant", pollutant_list, selected = "AQI"),
       sliderInput(nameSpace("countySlider"), label = h3("Slider"), min = 0, max = 1000, value = 100)
@@ -55,13 +117,6 @@ mapYears <- function(input, output, session) {
   
   #dailyData <- readDailyData()
   
-  #we had to use this snippet of code to convert our r data files
-  #https://stackoverflow.com/questions/5577221/how-can-i-load-an-object-into-a-variable-name-that-i-specify-from-an-r-data-file
-  loadRData <- function(fileName){
-    #loads an RData file, and returns it
-    load(fileName)
-    get(ls()[ls() != "fileName"])
-  }
   
   yearSelected <- reactive(input$Year)
   sliderSelected <- reactive(input$countySlider)
@@ -76,8 +131,10 @@ mapYears <- function(input, output, session) {
     
     fileName = paste("daily_data/daily_aqi_by_county_",toString(justOneYear), ".Rdata",  sep="")
     print(fileName)
-    dailyData <- loadRData(file= fileName)
+    daily <- load(fileName)
+    dailyData <- get(daily[ls() != "fileName"])
     dailyData <- separate(dailyData, Date, c("Year", "Month", "Day"), sep = "-", remove = FALSE)
+    
     print(dailyData)
     
     if(justOnePollutant == "AQI"){
