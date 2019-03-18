@@ -45,11 +45,11 @@ readDailyData <- function(){
 
 readHourlyData <- function(){
 
-  temp = list.files("hourly_data/")
+  temp = list.files("12counties_hourly_data/")
   # append daily_data/ to the beginning of each file name
   temp2 = list
   for(name in temp) {
-    newname = paste("hourly_data/", toString(name), sep="")
+    newname = paste("12counties_hourly_data/", toString(name), sep="")
     temp2 <- c(temp2, newname)
   }
   temp2[1] <- NULL

@@ -10,12 +10,12 @@ graphHourlyInput <- function(id, state_list, county_list) {
 
   nameSpace <- NS(id)
   
-  # state_list = c("Illinois", "Hawaii", "New York", "California", 
-  #                "Washington", "Texas", "Florida", "New Mexico", 
-  #                "Minnesota", "North Carolina", "Alabama")
-  # county_list = c("Cook", "Hawaii", "New York", "Los Angeles", 
-  #                 "King", "Harris", "Miami-Dade", "San Juan", 
-  #                 "Hennepin", "Wake", "Dekalb", "Jefferson")
+  state_list = c("Illinois", "Hawaii", "New York", "California",
+                 "Washington", "Texas", "Florida", "New Mexico",
+                 "Minnesota", "North Carolina", "Alabama")
+  county_list = c("Cook", "Hawaii", "New York", "Los Angeles",
+                  "King", "Harris", "Miami-Dade", "San Juan",
+                  "Hennepin", "Wake", "Dekalb", "Jefferson")
   
   fluidRow(fluidRow(column(6, plotOutput(
     nameSpace("AQIHourlyPlot")
