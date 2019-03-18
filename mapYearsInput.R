@@ -55,13 +55,6 @@ mapYears <- function(input, output, session) {
   
   #dailyData <- readDailyData()
   
-  #we had to use this snippet of code to convert our r data files
-  #https://stackoverflow.com/questions/5577221/how-can-i-load-an-object-into-a-variable-name-that-i-specify-from-an-r-data-file
-  loadRData <- function(fileName){
-    #loads an RData file, and returns it
-    load(fileName)
-    get(ls()[ls() != "fileName"])
-  }
   
   yearSelected <- reactive(input$Year)
   sliderSelected <- reactive(input$countySlider)
@@ -76,8 +69,10 @@ mapYears <- function(input, output, session) {
     
     fileName = paste("daily_data/daily_aqi_by_county_",toString(justOneYear), ".Rdata",  sep="")
     print(fileName)
-    dailyData <- loadRData(file= fileName)
+    daily <- load(fileName)
+    dailyData <- get(daily[ls() != "fileName"])
     dailyData <- separate(dailyData, Date, c("Year", "Month", "Day"), sep = "-", remove = FALSE)
+    
     print(dailyData)
     
     if(justOnePollutant == "AQI"){

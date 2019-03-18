@@ -31,7 +31,6 @@ readDailyData <- function(){
     get(ls()[ls()!= "filename"])
   })
   dailyData <- do.call(rbind, listedData)
-  
   dailyData <- separate(dailyData, Date, c("Year", "Month", "Day"), sep = "-", remove = FALSE)
   
   year_list <- unique(as.vector(dailyData$Year))
