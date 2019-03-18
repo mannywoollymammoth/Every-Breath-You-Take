@@ -13,9 +13,6 @@ graphHourlyInput <- function(id, state_list, county_list) {
   state_list = c("Illinois", "Hawaii", "New York", "California",
                  "Washington", "Texas", "Florida", "New Mexico",
                  "Minnesota", "North Carolina", "Alabama")
-  county_list = c("Cook", "Hawaii", "New York", "Los Angeles",
-                  "King", "Harris", "Miami-Dade", "San Juan",
-                  "Hennepin", "Wake", "Dekalb", "Jefferson")
   
   fluidRow(fluidRow(column(6, plotOutput(
     nameSpace("AQIHourlyPlot"),
@@ -89,12 +86,7 @@ graphHourlyInput <- function(id, state_list, county_list) {
       h2("Graph Hours Input"),
       width = 4,
       selectInput(nameSpace("state"), "Select a state", state_list, selected = "Illinois"),
-      selectInput(
-        nameSpace("county"),
-        "Select a county",
-        county_list,
-        selected = "Cook"
-      ),   #TODO: fix the county list - needs to be reactive
+      selectInput(nameSpace("county"), "Select a county", county_list, selected = "Cook"),
       
       #TODO: fix this - needs to only choose from available days
       dateInput(nameSpace("date"), "Date input", value = "2018-01-01"),
@@ -114,12 +106,22 @@ graphHourlyInput <- function(id, state_list, county_list) {
 
 #server logic
 graphHourly <- function(input, output, session) {
+
   hourlyData <- readHourlyData()
-  #hourlyData <- c(0:100)
   
+  date_list <- unique(as.vector(hourlyData$`Date GMT`))
+  full_data_list <- seq(as.Date("2018-01-01"), as.Date("2018-12-31"), "days")
+  no_data_days <- full_data_list[! full_data_list %in% date_list]
+  print(no_data_days)
+  
+  countyReactive <- reactive(input$county)
   dataSelectedReactive <- reactive(input$data_selected)
   
   allHourlyDataForDayReactive <- reactive({
+    print(input$state)
+    print(countyReactive())
+    print(input$date)
+    
     subset(
       hourlyData,
       hourlyData$`State Name` == input$state &
@@ -128,10 +130,35 @@ graphHourly <- function(input, output, session) {
     )
   })
   
+  # ------------------ UI stuff ----------------------------
+  
+  observeEvent(input$state, {
+    
+    state_selected <- reactive(input$state)
+    state_selected <- state_selected()
+    
+    county_list <- unique(as.vector( subset(hourlyData$`County Name`, hourlyData$`State Name` == state_selected) ))
+    
+    updateSelectInput(session, "county", choices = county_list, selected = input$county)
+    
+    # updateDateInput(session, "date", value = "2018-01-01", dats , datesdisabled = no_data_days)
+    
+  })
+  
+  # output$county <- renderUI({
+  #   
+  #   county_list <-
+  #     unique(as.vector(subset(hourlyData$`County Name`, hourlyData$`State Name` == input$state)))
+  #   print(county_list)
+  #   selectInput(nameSpace("county"), "Select a county: ", county_list, selected = county_list[0])
+  # })
+  
   # --------------------------------------------------------
   
   output$AQIHourlyPlot <- renderPlot({
     oneDayData <- allHourlyDataForDayReactive()
+    print(oneDayData)
+    
     dataSelected <- dataSelectedReactive()
     
     print(dataSelected)
