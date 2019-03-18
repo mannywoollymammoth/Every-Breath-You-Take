@@ -23,7 +23,7 @@ graphYearsInput <- function(id, year_list, state_list, county_list) {
                              solidHeader = TRUE,
                              status = "primary",
                              width = 12,
-                             plotOutput(nameSpace("AQIPlot"))
+                             plotOutput(nameSpace("AQIPlot"), height = 1400)
                            )),
                     
                     column(
@@ -33,14 +33,75 @@ graphYearsInput <- function(id, year_list, state_list, county_list) {
                         solidHeader = TRUE,
                         status = "primary",
                         width = 12,
-                        plotOutput(nameSpace("AQIBar"))
+                        plotOutput(nameSpace("AQIBar"), height = 1400)
                       )
                     )),
            
            fluidRow(
-             
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
              box(
                h2("Graph Years Input"),
+               width = 4,
                selectInput(nameSpace("year"), "Select a year: ", year_list),
                selectInput(nameSpace("state"), "Select a state", state_list, selected = "Illinois"),
                selectInput(
@@ -140,14 +201,13 @@ graphYears <- function(input, output, session, NameListData) {
   
   #updates the County list when a new state is selected
   observeEvent(input$state, {
-    print("In the observer")
+   
     stateSelected <- reactive(input$state)
     stateSelected <- stateSelected()
-    print("state selected")
-    print(stateSelected)
+    
+   
     parseByState <- subset(NameListData, NameListData$`State Name` == stateSelected)
-    print("parse by state")
-    print(parseByState)
+   
     parseByCounties <- unique(parseByState$`county Name`)
 
 
