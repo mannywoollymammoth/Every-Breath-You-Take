@@ -43,15 +43,26 @@ ui <- dashboardPage(
     disable = FALSE,
     collapsed = FALSE,
     
+    sidebarMenu(
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      br(),
+      menuItem("GraphsYears", tabName = "graphsYears"),
+      menuItem("GraphsHourly", tabName = "graphsHourly"),
+      menuItem("Map", icon = icon("th"), tabName = "mapYears")
+    )
     
-    menuItem("Graphs", tabName = "Graphs", icon = icon("dashboard"), 
-             menuSubItem("Years", tabName = "graphsYears"),
-             menuSubItem("Hourly", tabName = "graphsHourly")
-             ),
-    menuItem("Map", icon = icon("th"), tabName = "Map",
-             menuSubItem("Years", tabName = "mapYears"),
-             menuSubItem("Hourly", tabName = "mapHourly")
-             )
+    
+    
     
   ),
   
