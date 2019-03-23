@@ -31,7 +31,11 @@ graphHourlyInput <- function(id, state_list, county_list) {
       selectInput(nameSpace("county"), "Select a county", county_list, selected = "Cook"),
       
       #TODO: fix this - needs to only choose from available days
-      dateInput(nameSpace("date"), "Date input", value = "2018-01-01"),
+      #dateInput(nameSpace("date"), "Date input", value = "2018-01-01"),
+      uiOutput(nameSpace("date")),
+      #uiOutput(nameSpace("date2")),
+      
+      
       
       # TODO: fix this - needs to only choose from available pollutants
       checkboxGroupInput(
@@ -48,13 +52,26 @@ graphHourlyInput <- function(id, state_list, county_list) {
 
 #server logic
 graphHourly <- function(input, output, session) {
-
+  
   hourlyData <- readHourlyData()
+ 
   
   date_list <- unique(as.vector(hourlyData$`Date GMT`))
   full_data_list <- seq(as.Date("2018-01-01"), as.Date("2018-12-31"), "days")
+
   no_data_days <- full_data_list[! full_data_list %in% date_list]
-  print(no_data_days)
+  
+  #print(full_data_list)
+  date_list <- unique(hourlyData$`Date GMT`)
+  date_list <- format(as.Date(date_list, "%Y-%m-%d"))
+  #print(date_list)
+  
+  #no_data_days2 = setdiff(full_data_list, date_list)
+  #no_data_days2 = as.Date(no_data_days2, origin = "1970-01-01")
+  
+  #print(no_data_days2)
+  
+  
   
   countyReactive <- reactive(input$county)
   dataSelectedReactive <- reactive(input$data_selected)
@@ -86,6 +103,14 @@ graphHourly <- function(input, output, session) {
     # updateDateInput(session, "date", value = "2018-01-01", dats , datesdisabled = no_data_days)
     
   })
+  
+  output$date <- renderUI({
+    
+    nameSpace <- session$ns
+    dateInput(nameSpace("date"), "Date input", value = "2018-01-01", datesdisabled = no_data_days)
+  })
+  
+  output
   
   # output$county <- renderUI({
   #   

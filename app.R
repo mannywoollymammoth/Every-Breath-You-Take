@@ -83,7 +83,7 @@ ui <- dashboardPage(
               graphYearsInput("graphyears", year_list, state_list, county_list)
       ),
       tabItem(tabName = "graphsHourly",
-              graphHourlyInput("graphhourly", state_list, county_list)
+              graphHourlyInput(id ="graphhourly", state_list, county_list)
       ),
       tabItem(tabName = "mapYears",
               #mapYearsInput(year_list, state_list)
@@ -93,7 +93,6 @@ ui <- dashboardPage(
   ),
 
   dashboardBody(
-    #graphYearsInput(year_list)
     dynamicBody
   )
     
@@ -104,7 +103,7 @@ ui <- dashboardPage(
 server <- function(input, output) { 
   
   gy <- callModule(graphYears, "graphyears", NameListData )
-  gh <- callModule(graphHourly, "graphhourly")
+  gh <- callModule(graphHourly, id = "graphhourly")
   my <- callModule(mapYears, "mapyears")
   
   observeEvent(input$openInfo, {
